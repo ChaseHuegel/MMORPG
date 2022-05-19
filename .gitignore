@@ -1,0 +1,9 @@
+**/.vs/
+**/bin/
+**/obj/
+**/screenshots/
+**/config/
+**/nuget/
+
+*.log
+NuGet.config

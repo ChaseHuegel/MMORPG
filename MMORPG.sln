@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.Client", "mmorpg.client\Mmorpg.Client.csproj", "{4A825A49-6218-4066-9134-300C61B29E2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.ClientConsole", "mmorpg.clientconsole\Mmorpg.ClientConsole.csproj", "{863CAE4F-5D6B-48F7-A3AC-3641D8BA3EA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.Server", "mmorpg.server\Mmorpg.Server.csproj", "{ECC4D0AA-766F-4F53-8445-2EC2970DC610}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.Shared", "mmorpg.shared\Mmorpg.Shared.csproj", "{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A825A49-6218-4066-9134-300C61B29E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A825A49-6218-4066-9134-300C61B29E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A825A49-6218-4066-9134-300C61B29E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A825A49-6218-4066-9134-300C61B29E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{863CAE4F-5D6B-48F7-A3AC-3641D8BA3EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{863CAE4F-5D6B-48F7-A3AC-3641D8BA3EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{863CAE4F-5D6B-48F7-A3AC-3641D8BA3EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{863CAE4F-5D6B-48F7-A3AC-3641D8BA3EA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECC4D0AA-766F-4F53-8445-2EC2970DC610}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC4D0AA-766F-4F53-8445-2EC2970DC610}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC4D0AA-766F-4F53-8445-2EC2970DC610}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC4D0AA-766F-4F53-8445-2EC2970DC610}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

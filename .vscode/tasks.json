@@ -1,0 +1,67 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Run Client/Server",
+            "dependsOn": [
+                "Server",
+                "Client"
+            ],
+            "dependsOrder": "parallel",
+            "group": "build",
+            "problemMatcher": [
+                "$tsc-watch"
+            ]
+        },
+        {
+            "label": "Client",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmorpg.clientconsole/Mmorpg.ClientConsole.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Server",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmorpg.server/Mmorpg.Server.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
