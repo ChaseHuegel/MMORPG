@@ -56,7 +56,7 @@ namespace Mmorpg.Server.Data
 
             if (HasUpdated)
             {
-                Server.Broadcast(new EntityPacket {
+                Server.Broadcast(new EntitySnapshotPacket {
                     ID = ID,
                     X = X,
                     Y = Y,

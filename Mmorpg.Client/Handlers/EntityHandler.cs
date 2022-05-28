@@ -9,7 +9,7 @@ namespace Mmorpg.Client.Handlers
     public static class EntityHandler
     {
         [ClientPacketHandler]
-        public static void OnEntitySnapshotClient(NetClient client, EntityPacket packet, NetEventArgs e)
+        public static void OnEntitySnapshotClient(NetClient client, EntitySnapshotPacket packet, NetEventArgs e)
         {
             //  Update the entity if it exists; otherwise create it.
             if (GameClient.Instance.Characters.TryGetValue(packet.ID, out LivingEntity character))

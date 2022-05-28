@@ -5,8 +5,8 @@ using Swordfish.Library.Types;
 
 namespace Mmorpg.Packets
 {
-    [Packet(RequiresSession = true)]
-    public struct EntityPacket : ISerializedPacket
+    [Packet(RequiresSession = true, Ordered = true)]
+    public struct EntitySnapshotPacket : ISerializedPacket
     {
         public int ID;
         

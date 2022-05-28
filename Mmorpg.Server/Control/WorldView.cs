@@ -72,7 +72,7 @@ namespace Mmorpg.Server.Control
                 if (LongTickTime == 0f)
                 {
                     //  Broadcast a snapshot of each player each long tick
-                    Server.Broadcast(new EntityPacket {
+                    Server.Broadcast(new EntitySnapshotPacket {
                         ID = player.ID,
                         X = player.X,
                         Y = player.Y,
@@ -99,7 +99,7 @@ namespace Mmorpg.Server.Control
             };
 
             //  Send a snapshot of the new player to all other players
-            EntityPacket snapshot = new EntityPacket {
+            EntitySnapshotPacket snapshot = new EntitySnapshotPacket {
                 ID = livingEntity.ID,
                 X = livingEntity.X,
                 Y = livingEntity.Y,
@@ -117,7 +117,7 @@ namespace Mmorpg.Server.Control
             //  Send a snapshot of all entities to the new player
             foreach (LivingEntity entity in Players.Values)
             {                
-                Server.Send(new EntityPacket {
+                Server.Send(new EntitySnapshotPacket {
                     ID = entity.ID,
                     X = entity.X,
                     Y = entity.Y,

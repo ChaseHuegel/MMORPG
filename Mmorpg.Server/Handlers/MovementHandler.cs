@@ -20,7 +20,7 @@ namespace Mmorpg.Server.Handlers
                 player.Jumped = packet.State[0];
                 player.Moving = packet.State[1];
 
-                EntityPacket snapshot = new EntityPacket {
+                EntitySnapshotPacket snapshot = new EntitySnapshotPacket {
                     ID = player.ID,
                     X = player.X,
                     Y = player.Y,
