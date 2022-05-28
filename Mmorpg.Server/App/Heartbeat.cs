@@ -1,7 +1,7 @@
 using Swordfish.Library.Networking;
 using Swordfish.Library.Threading;
 
-namespace MMORPG.Server.App
+namespace Mmorpg.Server.App
 {
     public class Heartbeat
     {
@@ -22,7 +22,6 @@ namespace MMORPG.Server.App
         public void Start()
         {
             Server = new GameServer();
-            
         }
 
         public void Stop()
@@ -32,6 +31,7 @@ namespace MMORPG.Server.App
 
         public void Tick(float deltaTime)
         {
+            Server.Tick(deltaTime);
             UpdateTitle();
         }
 

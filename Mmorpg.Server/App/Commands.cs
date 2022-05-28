@@ -1,4 +1,4 @@
-namespace MMORPG.Server.App
+namespace Mmorpg.Server.App
 {
     public static class Commands
     {

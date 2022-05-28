@@ -5,6 +5,7 @@ using Swordfish.Library.Extensions;
 using Swordfish.Library.Types;
 using Mmorpg.Data;
 using Mmorpg.Enums;
+using Mmorpg.Server.Data;
 
 namespace MMORPG.Server.Util
 {
@@ -121,7 +122,7 @@ namespace MMORPG.Server.Util
             return false;
         }
 
-        public static string[] GetCharacterList(string username)
+        public static Character[] GetCharacterList(string username)
         {
             List<string> guidStrings = new List<string>();
 
@@ -132,28 +133,38 @@ namespace MMORPG.Server.Util
                 QueryResult guidResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5)
                     .GetRecord("characterLists", $"character{i}", "username", username);
                 
-                string guidString = guidResult.Table.Rows[0][0].ToString();
-                guidStrings.Add(guidString);
+                if (guidResult.Exists())
+                {
+                    string guidString = guidResult.Table.Rows[0][0].ToString();
+                    guidStrings.Add(guidString);
+                }
             }
             
             //  Collect all character names from respective GUIDs
-            List<string> characterNames = new List<string>();
+            List<Character> characters = new List<Character>();
             foreach (string guidString in guidStrings)
             {
                 if (!string.IsNullOrEmpty(guidString))
                 {
                     QueryResult namesResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5)
                         .GetRecord("characters", "*", "guid", guidString);
+
+                    Character character = new Character {
+                        Guid = Guid.Parse(guidString),
+                        Name = namesResult.Table.Rows[0]["name"].ToString(),
+                        Race = (int)namesResult.Table.Rows[0]["race"],
+                        Class = (int)namesResult.Table.Rows[0]["class"],
+                    };
                         
-                    characterNames.Add(namesResult.Table.Rows[0]["name"].ToString());
+                    characters.Add(character);
                 }
                 else
                 {
-                    characterNames.Add(null);
+                    characters.Add(null);
                 }
             }
 
-            return characterNames.ToArray();
+            return characters.ToArray();
         }
 
         public static void DeleteCharacter(string username, int slot)

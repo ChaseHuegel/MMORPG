@@ -6,5 +6,7 @@ namespace Mmorpg.Data
         public float Direction;
         public bool Jumped;
         public bool Moving;
+        public int Race;
+        public int Class;
     }
 }

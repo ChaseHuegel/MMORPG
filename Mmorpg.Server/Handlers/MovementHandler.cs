@@ -12,25 +12,25 @@ namespace Mmorpg.Server.Handlers
         [ServerPacketHandler]
         public static void OnMovementServer(NetServer server, MovementPacket packet, NetEventArgs e)
         {
-            //  Update the entity if it exists
-            if (GameServer.Instance.Characters.TryGetValue(packet.ID, out LivingEntity character))
+            //  Update the player if it exists
+            if (GameServer.Instance.WorldView.Players.TryGetValue(packet.ID, out LivingEntity player))
             {
-                character.Heading = packet.Heading;
-                character.Direction = packet.Direction;
-                character.Jumped = packet.State[0];
-                character.Moving = packet.State[1];
+                player.Heading = packet.Heading;
+                player.Direction = packet.Direction;
+                player.Jumped = packet.State[0];
+                player.Moving = packet.State[1];
 
                 EntityPacket snapshot = new EntityPacket {
-                    ID = character.ID,
-                    X = character.X,
-                    Y = character.Y,
-                    Z = character.Z,
-                    Heading = character.Heading,
-                    Speed = character.Speed,
-                    Direction = character.Direction,
+                    ID = player.ID,
+                    X = player.X,
+                    Y = player.Y,
+                    Z = player.Z,
+                    Heading = player.Heading,
+                    Speed = player.Speed,
+                    Direction = player.Direction,
                     State = {
-                        [0] = character.Jumped,
-                        [1] = character.Moving
+                        [0] = player.Jumped,
+                        [1] = player.Moving
                     }
                 };
 

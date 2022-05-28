@@ -5,6 +5,7 @@ using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
 using Mmorpg.Enums;
 using Mmorpg.Packets;
+using Mmorpg.Server.Data;
 
 namespace Mmorpg.Server.Handlers
 {
@@ -19,18 +20,23 @@ namespace Mmorpg.Server.Handlers
             if (!GameServer.Instance.Logins.TryGetValue(e.EndPoint, out string username))
                 flags |= JoinWorldFlags.NotLoggedIn;
 
-            string characterName = Characters.GetCharacterList(username)[packet.Slot];
+            Character character = Characters.GetCharacterList(username)[packet.Slot];
+
+            //  Verify the endpoint isn't already logged into a character
+            if (GameServer.Instance.Players.ContainsKey(e.EndPoint))
+                flags |= JoinWorldFlags.JoinFailed;
 
             packet.Flags = (int)flags;
             server.Send(packet, e.EndPoint);
 
             if (flags == JoinWorldFlags.None)
             {
-                Console.WriteLine($"[{e.EndPoint}] is entering the world as [{characterName}]");
+                GameServer.Instance.Players.TryAdd(e.EndPoint, character);
+                Console.WriteLine($"[{e.EndPoint}] is entering the world as [{character.Name}]");
             }
             else
             {
-                Console.WriteLine($"[{e.EndPoint}] tried to enter the world as [{characterName}]: {flags}");
+                Console.WriteLine($"[{e.EndPoint}] tried to enter the world as [{character.Name}]: {flags}");
             }
         }
     }

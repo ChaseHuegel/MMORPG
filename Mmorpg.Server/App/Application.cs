@@ -2,7 +2,7 @@
 using Swordfish.Library.Networking;
 using Mmorpg.Packets;
 
-namespace MMORPG.Server.App
+namespace Mmorpg.Server.App
 {
     public class Application
     {

@@ -1,14 +1,14 @@
-using System.Reflection;
 using System.Collections.Concurrent;
 using System.Net;
 
+using Mmorpg.Data;
+using Mmorpg.Server.Control;
+using Mmorpg.Server.Data;
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Packets;
 using Swordfish.Library.Util;
-using Mmorpg.Data;
-using Mmorpg.Packets;
 
-namespace MMORPG.Server
+namespace Mmorpg.Server
 {
     public class GameServer : NetServer
     {
@@ -16,10 +16,10 @@ namespace MMORPG.Server
         public static ServerConfig Configuration => s_Configuration ?? (s_Configuration = Config.Load<ServerConfig>("config/server.toml"));
 
         public static GameServer Instance;
+        public WorldView WorldView;
 
-        public ConcurrentDictionary<int, LivingEntity> Characters = new ConcurrentDictionary<int, LivingEntity>();
-
-        public Dictionary<EndPoint, string> Logins = new Dictionary<EndPoint, string>();
+        public ConcurrentDictionary<EndPoint, Character> Players = new ConcurrentDictionary<EndPoint, Character>();
+        public ConcurrentDictionary<EndPoint, string> Logins = new ConcurrentDictionary<EndPoint, string>();
 
         public GameServer() : base(Configuration.Connection.Port)
         {
@@ -28,6 +28,13 @@ namespace MMORPG.Server
             
             HandshakePacket.ValidateHandshakeCallback = ValidateHandshake;
             HandshakePacket.ValidationSignature = "Ekahsdnah";
+
+            WorldView = new WorldView(this);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            WorldView.Tick(deltaTime);
         }
 
         public bool ValidateHandshake(EndPoint endPoint)
@@ -37,47 +44,10 @@ namespace MMORPG.Server
 
         public override void OnSessionStarted(object sender, NetEventArgs e)
         {
-            LivingEntity character = new LivingEntity {
-                ID = e.Session.ID
-            };
+            Players.TryGetValue(e.EndPoint, out Character character);
+            WorldView.AddPlayer(character, e.Session);
 
-            //  Send a snapshot of the new player to all other players
-            EntityPacket snapshot = new EntityPacket {
-                ID = character.ID,
-                X = character.X,
-                Y = character.Y,
-                Z = character.Z,
-                Heading = character.Heading,
-                Speed = character.Speed,
-                Direction = character.Direction,
-                State = {
-                    [0] = character.Jumped,
-                    [1] = character.Moving
-                }
-            };
-            BroadcastExcept(snapshot, e.Session);
-
-            //  Send a snapshot of all entities to the new player
-            foreach (LivingEntity entity in Characters.Values)
-            {                
-                Send(new EntityPacket {
-                    ID = entity.ID,
-                    X = entity.X,
-                    Y = entity.Y,
-                    Z = entity.Z,
-                    Heading = entity.Heading,
-                    Speed = entity.Speed,
-                    Direction = entity.Direction,
-                    State = {
-                        [0] = entity.Jumped,
-                        [1] = entity.Moving
-                    }
-                }, e.Session);
-            }
-
-            //  Add the new player to the world
-            Characters.TryAdd(e.Session.ID, character);
-            Console.WriteLine($"[{e.Session}] joined the game world.");
+            Console.WriteLine($"[{e.Session}] joined the game world as [{character.Name}].");
         }
     }
 }

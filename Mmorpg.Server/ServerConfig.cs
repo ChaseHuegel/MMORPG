@@ -1,6 +1,6 @@
 using Swordfish.Library.Util;
 
-namespace MMORPG.Server
+namespace Mmorpg.Server
 {
     public class ServerConfig : Config
     {

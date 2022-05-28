@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swordfish.Library" Version="1.1.24" />
+    <PackageReference Include="Swordfish.Library" Version="1.2.1" />
   </ItemGroup>
 
 </Project>

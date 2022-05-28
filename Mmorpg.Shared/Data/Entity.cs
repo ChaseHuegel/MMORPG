@@ -21,5 +21,7 @@ namespace Mmorpg.Data
         public string Title;
 
         public string Description;
+
+        public virtual void Tick(float deltaTime) {}
     }
 }

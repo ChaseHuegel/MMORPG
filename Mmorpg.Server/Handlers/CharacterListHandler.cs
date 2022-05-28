@@ -19,7 +19,7 @@ namespace Mmorpg.Server.Handlers
                 flags |= AccountFlags.UsernameIncorrect;
 
             if (flags == AccountFlags.None)
-                packet.CharacterNames = Characters.GetCharacterList(username);
+                packet.CharacterNames = Characters.GetCharacterList(username).Select(x => x?.Name).ToArray();
             
             packet.Flags = (int)flags;
             server.Send(packet, e.EndPoint);
