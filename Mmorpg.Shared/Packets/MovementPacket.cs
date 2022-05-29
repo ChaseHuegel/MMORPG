@@ -3,7 +3,7 @@ using Swordfish.Library.Networking.Attributes;
 using Swordfish.Library.Networking.Interfaces;
 using Swordfish.Library.Types;
 
-namespace Mmorpg.Packets
+namespace Mmorpg.Shared.Packets
 {
     [Packet(RequiresSession = true, Ordered = true)]
     public struct MovementPacket : ISerializedPacket

@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using Mmorpg.Data;
 using Mmorpg.Packets;
 using Mmorpg.Server.Data;
+using Mmorpg.Shared.Packets;
+
 using Swordfish.Library.Diagnostics;
 using Swordfish.Library.Networking;
 
@@ -16,23 +18,16 @@ namespace Mmorpg.Server.Control
 
         private GameServer Server;
 
-        public ConcurrentDictionary<int, LivingEntity> Players = new ConcurrentDictionary<int, LivingEntity>();
-        public ConcurrentDictionary<int, NPC> NPCs = new ConcurrentDictionary<int, NPC>();
-
-        private Random Random = new Random();
+        public WorldState State { get; private set; }
 
         public WorldView(GameServer server)
         {
             Server = server;
 
-            for (int i = 0; i < 50; i++)
+            State = new WorldState();
+            foreach (NPC npc in State.NPCs.Values)
             {
-                int id = Random.Next(100000, int.MaxValue);
-                NPCs.TryAdd(i, new NPC {
-                    Name = $"NPC{id}",
-                    ID = id,
-                    Server = Server
-                });
+                npc.Server = Server;
             }
         }
 
@@ -42,13 +37,13 @@ namespace Mmorpg.Server.Control
             if (LongTickTime >= LongTickRate)
                 LongTickTime = 0f;
 
-            foreach (NPC npc in NPCs.Values)
+            foreach (NPC npc in State.NPCs.Values)
             {
                 //  Tick each entity
                 npc.Tick(deltaTime);
             }
 
-            foreach (LivingEntity player in Players.Values)
+            foreach (LivingEntity player in State.Players.Values)
             {
                 //  Tick each player
                 player.Tick(deltaTime);
@@ -69,14 +64,13 @@ namespace Mmorpg.Server.Control
                             [1] = player.Moving
                         }
                     });
-
                 }
             }
         }
 
         public void AddPlayer(Character character, NetSession session)
         {
-            LivingEntity livingEntity = new LivingEntity {
+            LivingEntity newPlayer = new LivingEntity {
                 ID = session.ID,
                 Name = character.Name,
                 Race = character.Race,
@@ -84,40 +78,27 @@ namespace Mmorpg.Server.Control
             };
 
             //  Send a snapshot of the new player to all other players
-            EntitySnapshotPacket snapshot = new EntitySnapshotPacket {
-                ID = livingEntity.ID,
-                X = livingEntity.X,
-                Y = livingEntity.Y,
-                Z = livingEntity.Z,
-                Heading = livingEntity.Heading,
-                Speed = livingEntity.Speed,
-                Direction = livingEntity.Direction,
-                State = {
-                    [0] = livingEntity.Jumped,
-                    [1] = livingEntity.Moving
-                }
+            EntityPacket snapshot = new EntityPacket {
+                ID = newPlayer.ID,
+                X = newPlayer.X,
+                Y = newPlayer.Y,
+                Z = newPlayer.Z,
+                Heading = newPlayer.Heading,
+                Size = newPlayer.Size,
+                Name = newPlayer.Name,
+                Label = newPlayer.Label,
+                Title = newPlayer.Title,
+                Description = newPlayer.Description,
+                Speed = newPlayer.Speed,
+                Direction = newPlayer.Direction,
+                Jumped = newPlayer.Jumped,
+                Moving = newPlayer.Moving,
+                Race = newPlayer.Race,
+                Class = newPlayer.Class
             };
             Server.BroadcastExcept(snapshot, session);
 
-            //  Send a snapshot of all entities to the new player
-            foreach (LivingEntity entity in Players.Values)
-            {
-                Server.Send(new EntitySnapshotPacket {
-                    ID = entity.ID,
-                    X = entity.X,
-                    Y = entity.Y,
-                    Z = entity.Z,
-                    Heading = entity.Heading,
-                    Speed = entity.Speed,
-                    Direction = entity.Direction,
-                    State = {
-                        [0] = entity.Jumped,
-                        [1] = entity.Moving
-                    }
-                }, session);
-            }
-
-            Players.TryAdd(livingEntity.ID, livingEntity);
+            State.Players.TryAdd(newPlayer.ID, newPlayer);
         }
     }
 }

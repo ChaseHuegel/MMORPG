@@ -1,7 +1,7 @@
 using System.Numerics;
 using System;
 using Mmorpg.Data;
-using Mmorpg.Packets;
+using Mmorpg.Shared.Packets;
 
 namespace Mmorpg.Server.Data
 {
@@ -11,27 +11,18 @@ namespace Mmorpg.Server.Data
 
         private float Timer;
 
-        private Vector3? m_Position;
-        private Vector3 Position { 
-            get => m_Position ?? (m_Position = new Vector3(X, Y, Z)).Value;
-            set => m_Position = value;
-        }
-
         public GameServer Server;
 
         public bool HasUpdated { get; private set; }
 
-        public NPC()
-        {
-            Moving = true;
-            Heading = Random.NextSingle() * 360f;
-        }
+        public bool DoesWander;
+        public NPC Wander(bool value) { DoesWander = value; return this; }
 
         public override void Tick(float deltaTime)
         {
             HasUpdated = false;
             Timer += deltaTime;
-            if (Timer >= 1f)
+            if (Timer >= 1f && DoesWander)
             {
                 if (Random.NextSingle() > 0.5f)
                 {

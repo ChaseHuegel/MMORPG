@@ -1,9 +1,9 @@
-using MMORPG.Server;
+using Mmorpg.Data;
+using Mmorpg.Packets;
+using Mmorpg.Shared.Packets;
 
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Mmorpg.Data;
-using Mmorpg.Packets;
 
 namespace Mmorpg.Server.Handlers
 {
@@ -13,7 +13,7 @@ namespace Mmorpg.Server.Handlers
         public static void OnMovementServer(NetServer server, MovementPacket packet, NetEventArgs e)
         {
             //  Update the player if it exists
-            if (GameServer.Instance.WorldView.Players.TryGetValue(packet.ID, out LivingEntity player))
+            if (GameServer.Instance.WorldView.State.Players.TryGetValue(packet.ID, out LivingEntity player))
             {
                 player.Heading = packet.Heading;
                 player.Direction = packet.Direction;

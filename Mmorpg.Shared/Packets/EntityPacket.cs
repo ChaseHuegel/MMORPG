@@ -1,15 +1,14 @@
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
 using Swordfish.Library.Networking.Interfaces;
-using Swordfish.Library.Types;
 
 namespace Mmorpg.Shared.Packets
 {
-    [Packet(RequiresSession = true, Ordered = true)]
-    public struct EntitySnapshotPacket : ISerializedPacket
+    [Packet]
+    public struct EntityPacket : ISerializedPacket
     {
         public int ID;
-        
+
         public float X;
 
         public float Y;
@@ -18,10 +17,26 @@ namespace Mmorpg.Shared.Packets
 
         public float Heading;
 
+        public float Size;
+
+        public string Name;
+
+        public string Label;
+
+        public string Title;
+
+        public string Description;
+
         public float Speed;
 
         public float Direction;
 
-        public MultiBool State;
+        public bool Jumped;
+
+        public bool Moving;
+
+        public int Race;
+        
+        public int Class;
     }
 }

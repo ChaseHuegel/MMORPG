@@ -1,8 +1,8 @@
+using Mmorpg.Data;
+using Mmorpg.Shared.Packets;
+
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Mmorpg.Client;
-using Mmorpg.Data;
-using Mmorpg.Packets;
 
 namespace Mmorpg.Client.Handlers
 {
