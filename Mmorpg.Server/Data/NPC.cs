@@ -24,35 +24,31 @@ namespace Mmorpg.Server.Data
         public NPC()
         {
             Moving = true;
-            Speed = 4.5f;
-            Heading = (Random.NextSingle() * 360f) - 180f;
+            Heading = Random.NextSingle() * 360f;
         }
 
         public override void Tick(float deltaTime)
         {
-            base.Tick(deltaTime);
             HasUpdated = false;
-
             Timer += deltaTime;
             if (Timer >= 1f)
             {
                 if (Random.NextSingle() > 0.5f)
                 {
-                    Heading = (Random.NextSingle() * 360f) - 180f;
+                    Heading = Random.NextSingle() * 360f;
                     Direction = Heading;
-                    HasUpdated = true;
+                    Moving = true;
+                }
+                else
+                {
+                    Moving = false;
                 }
                 
+                HasUpdated = true;
                 Timer = 0f;
             }
 
-            if (Moving)
-            {
-                float[] direction = DirectionFromDegrees(Heading);
-
-                X += direction[0] * Speed * deltaTime * 1f;
-                Z += direction[1] * Speed * deltaTime * 1f;
-            }
+            base.Tick(deltaTime);
 
             if (HasUpdated)
             {
@@ -70,33 +66,6 @@ namespace Mmorpg.Server.Data
                     }
                 });
             }
-        }
-
-        private const double DegToRad = Math.PI/180d;
-
-        private static float[] DirectionFromDegrees(float degrees)
-        {
-            float[] coords = new float[2];
-            double radians = degrees * DegToRad;
-
-            coords[0] = (float) Math.Cos(radians);
-            coords[1] = (float) Math.Sin(radians);
-
-            return coords;
-        }
-
-        private static float[] RotatePosition(float x, float y, double degrees)
-        {
-            float[] coords = new float[2];
-            double radians = degrees * DegToRad;
-
-            double ca = Math.Cos(radians);
-            double sa = Math.Sin(radians);
-
-            coords[0] = (float)(ca *x - sa*y);
-            coords[1] = (float)(sa *x + ca*y);
-
-            return coords;
         }
     }
 }

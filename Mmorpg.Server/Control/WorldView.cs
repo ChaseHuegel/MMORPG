@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using Mmorpg.Data;
 using Mmorpg.Packets;
 using Mmorpg.Server.Data;
-
+using Swordfish.Library.Diagnostics;
 using Swordfish.Library.Networking;
 
 namespace Mmorpg.Server.Control
@@ -19,13 +19,15 @@ namespace Mmorpg.Server.Control
         public ConcurrentDictionary<int, LivingEntity> Players = new ConcurrentDictionary<int, LivingEntity>();
         public ConcurrentDictionary<int, NPC> NPCs = new ConcurrentDictionary<int, NPC>();
 
+        private Random Random = new Random();
+
         public WorldView(GameServer server)
         {
             Server = server;
 
             for (int i = 0; i < 50; i++)
             {
-                int id = i;
+                int id = Random.Next(100000, int.MaxValue);
                 NPCs.TryAdd(i, new NPC {
                     Name = $"NPC{id}",
                     ID = id,
@@ -44,24 +46,6 @@ namespace Mmorpg.Server.Control
             {
                 //  Tick each entity
                 npc.Tick(deltaTime);
-
-                // if (npc.HasUpdated)
-                // {
-                //     //  Broadcast a snapshot of an entity each time it updates
-                //     Server.Broadcast(new EntityPacket {
-                //         ID = npc.ID,
-                //         X = npc.X,
-                //         Y = npc.Y,
-                //         Z = npc.Z,
-                //         Heading = npc.Heading,
-                //         Speed = npc.Speed,
-                //         Direction = npc.Direction,
-                //         State = {
-                //             [0] = npc.Jumped,
-                //             [1] = npc.Moving
-                //         }
-                //     });
-                // }
             }
 
             foreach (LivingEntity player in Players.Values)
@@ -85,6 +69,7 @@ namespace Mmorpg.Server.Control
                             [1] = player.Moving
                         }
                     });
+
                 }
             }
         }
@@ -116,7 +101,7 @@ namespace Mmorpg.Server.Control
 
             //  Send a snapshot of all entities to the new player
             foreach (LivingEntity entity in Players.Values)
-            {                
+            {
                 Server.Send(new EntitySnapshotPacket {
                     ID = entity.ID,
                     X = entity.X,
