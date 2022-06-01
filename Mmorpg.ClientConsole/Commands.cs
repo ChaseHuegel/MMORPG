@@ -1,8 +1,6 @@
-using MMORPG.Server.Util;
-using Swordfish.Library.Types;
-using Mmorpg.Data;
-using Mmorpg.Enums;
 using Mmorpg.Packets;
+using Mmorpg.Shared.Data;
+using MMORPG.Shared.Util;
 
 namespace Mmorpg.ClientConsole
 {
@@ -55,46 +53,33 @@ namespace Mmorpg.ClientConsole
                         Slot = Int32.Parse(arguments[1])
                     });
                     break;
+                case "races":
+                    Heartbeat.Client.Send(new RaceListPacket {});
+                    break;
+                case "classes":
+                    Heartbeat.Client.Send(new ClassListPacket {});
+                    break;
                 case "create":
+                    Heartbeat.Client.Send(new RaceListPacket {});
+                    Heartbeat.Client.Send(new ClassListPacket {});
+
                     Console.WriteLine("-- Character Creation --");
                     Console.WriteLine("Type 'cancel' to exit");
                     Console.WriteLine();
 
-                    Console.WriteLine("Races: " + string.Join(", ", Characters.GetAllRaces().Select(x => x.Name)));
+                    Console.WriteLine("Races: " + string.Join(", ", Characters.Races.Select(x => x.Name)));
                     Console.WriteLine("Pick a race: ");
                     input = Console.ReadLine();
-                    DynamicEnumValue chosenRace = CharacterRaces.Get(input);
-                    Console.WriteLine();
                     if (input.ToLower() == "cancel") return;
+                    CharacterRace chosenRace = Characters.GetRace(Int32.Parse(input));
+                    Console.WriteLine();
 
-                    while (chosenRace == null)
-                    {
-                        Console.WriteLine("Invalid race! Try again...");
-                        Console.WriteLine("Pick a race: ");
-                        input = Console.ReadLine();
-                        chosenRace = CharacterRaces.Get(input);
-                        Console.WriteLine();
-
-                        if (input.ToLower() == "cancel") return;
-                    }
-
-                    Console.WriteLine("Classes: " + string.Join(", ", Characters.GetValidClasses(chosenRace).Select(x => x.Name)));
+                    Console.WriteLine("Classes: " + string.Join(", ", Characters.GetClassesForRace(chosenRace).Select(x => x.Name)));
                     Console.WriteLine("Pick a class: ");
                     input = Console.ReadLine();
-                    DynamicEnumValue chosenClass = CharacterClasses.Get(input);
-                    Console.WriteLine();
                     if (input.ToLower() == "cancel") return;
-
-                    while (Characters.ValidateRaceClass(chosenRace, chosenClass) != CreateCharacterFlags.None)
-                    {
-                        Console.WriteLine("Invalid class! Try again...");
-                        Console.WriteLine("Pick a class: ");
-                        input = Console.ReadLine();
-                        chosenClass = CharacterClasses.Get(input);
-                        Console.WriteLine();
-
-                        if (input.ToLower() == "cancel") return;
-                    }
+                    CharacterClass chosenClass = Characters.GetClass(Int32.Parse(input));
+                    Console.WriteLine();
 
                     Console.WriteLine("Pick your name: ");
                     input = Console.ReadLine();
@@ -104,8 +89,8 @@ namespace Mmorpg.ClientConsole
 
                     Heartbeat.Client.Send(new CreateCharacterPacket {
                         Name = chosenName,
-                        Race = chosenRace,
-                        Class = chosenClass,
+                        Race = chosenRace.ID,
+                        Class = chosenClass.ID,
                     });
                     break;
             }

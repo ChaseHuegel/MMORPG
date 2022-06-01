@@ -12,6 +12,6 @@ namespace Mmorpg.Enums
         NoOpenSlot = 8,
         InvalidRequest = 16,
         NotLoggedIn = 32,
-        InvalidCombo = 64,
+        InvalidCombination = 64,
     }
 }

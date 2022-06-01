@@ -20,7 +20,7 @@ namespace Mmorpg.Server.Handlers
                 flags |= DeleteCharacterFlags.NotLoggedIn;
 
             if (flags == DeleteCharacterFlags.None)
-                Characters.DeleteCharacter(username, packet.Slot);
+                ServerCharacters.DeleteCharacter(username, packet.Slot);
 
             packet.Flags = (int)flags;
             server.Send(packet, e.EndPoint);

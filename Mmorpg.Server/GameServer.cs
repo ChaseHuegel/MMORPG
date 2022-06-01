@@ -1,12 +1,16 @@
+using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Net;
 
 using Mmorpg.Data;
 using Mmorpg.Server.Control;
 using Mmorpg.Server.Data;
+using Swordfish.Integrations.SQL;
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Packets;
 using Swordfish.Library.Util;
+using MMORPG.Shared.Util;
+using Mmorpg.Shared.Data;
 
 namespace Mmorpg.Server
 {
@@ -29,7 +33,47 @@ namespace Mmorpg.Server
             HandshakePacket.ValidateHandshakeCallback = ValidateHandshake;
             HandshakePacket.ValidationSignature = "Ekahsdnah";
 
+            InitializeData();
             WorldView = new WorldView(this);
+        }
+
+        public void InitializeData()
+        {
+            //  Collect all races
+            List<CharacterRace> races = new List<CharacterRace>();
+            QueryResult racesResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5).Select("*").From("races").GetResult();
+            for (int i = 0; i < racesResult.Table.Rows.Count; i++)
+            {
+                races.Add(new CharacterRace {
+                    ID = (int)racesResult.Table.Rows[i][0],
+                    Name = racesResult.Table.Rows[i][1].ToString(),
+                    Brief = racesResult.Table.Rows[i][2].ToString(),
+                    Description = racesResult.Table.Rows[i][3].ToString(),
+                    ClassFlags = (int)racesResult.Table.Rows[i][4],
+                });
+            }
+            Characters.Races = races;
+            Console.WriteLine($"Races: {string.Join(", ", races.Select(x => x.Name))}");
+
+            //  Collect all classes
+            List<CharacterClass> classes = new List<CharacterClass>();
+            QueryResult classesResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5).Select("*").From("classes").GetResult();
+            for (int i = 0; i < classesResult.Table.Rows.Count; i++)
+            {
+                classes.Add(new CharacterClass {
+                    ID = (int)classesResult.Table.Rows[i][0],
+                    Name = classesResult.Table.Rows[i][1].ToString(),
+                    AbilityFlags = (long)classesResult.Table.Rows[i][2],
+                    ResourceFlags = (int)classesResult.Table.Rows[i][3],
+                    ArmorProficiencyFlags = (long)classesResult.Table.Rows[i][4],
+                    WeaponProficiencyFlags = (long)classesResult.Table.Rows[i][5],
+                    OtherProficiencyFlags = (long)classesResult.Table.Rows[i][6],
+                    Brief = classesResult.Table.Rows[i][7].ToString(),
+                    Description = classesResult.Table.Rows[i][8].ToString(),
+                });
+            }
+            Characters.Classes = classes;
+            Console.WriteLine($"Classes: {string.Join(", ", classes.Select(x => x.Name))}");
         }
 
         public void Tick(float deltaTime)

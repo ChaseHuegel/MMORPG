@@ -20,7 +20,7 @@ namespace Mmorpg.Server.Handlers
             if (!GameServer.Instance.Logins.TryGetValue(e.EndPoint, out string username))
                 flags |= JoinWorldFlags.NotLoggedIn;
 
-            Character character = Characters.GetCharacterList(username)[packet.Slot];
+            Character character = ServerCharacters.GetCharacterList(username)[packet.Slot];
 
             //  Verify the endpoint isn't already logged into a character
             if (GameServer.Instance.Players.ContainsKey(e.EndPoint))

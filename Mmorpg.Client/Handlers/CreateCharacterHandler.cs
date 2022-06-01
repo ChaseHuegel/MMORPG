@@ -5,6 +5,8 @@ using Mmorpg.Data;
 using Mmorpg.Enums;
 using Mmorpg.Packets;
 using System;
+using MMORPG.Shared.Util;
+using Mmorpg.Shared.Data;
 
 namespace Mmorpg.Client.Handlers
 {
@@ -13,8 +15,8 @@ namespace Mmorpg.Client.Handlers
         [ClientPacketHandler]
         public static void OnCreateCharacterClient(NetClient client, CreateCharacterPacket packet, NetEventArgs e)
         {
-            DynamicEnumValue chosenRace = CharacterRaces.Get(packet.Race);
-            DynamicEnumValue chosenClass = CharacterClasses.Get(packet.Class);
+            CharacterRace chosenRace = Characters.GetRace(packet.Race);
+            CharacterClass chosenClass = Characters.GetClass(packet.Class);
 
             CreateCharacterFlags flags = (CreateCharacterFlags)packet.Flags;
 
