@@ -20,7 +20,9 @@ namespace Mmorpg.Server.Handlers
             if (!GameServer.Instance.Logins.TryGetValue(e.EndPoint, out string username))
                 flags |= JoinWorldFlags.NotLoggedIn;
 
-            Character character = ServerCharacters.GetCharacterList(username)[packet.Slot];
+            Character character = ServerCharacters.GetCharacterList(username)[packet.Slot-1];
+            if (character == null)
+                flags |= JoinWorldFlags.JoinFailed;
 
             //  Verify the endpoint isn't already logged into a character
             if (GameServer.Instance.Players.ContainsKey(e.EndPoint))
@@ -32,11 +34,11 @@ namespace Mmorpg.Server.Handlers
             if (flags == JoinWorldFlags.None)
             {
                 GameServer.Instance.Players.TryAdd(e.EndPoint, character);
-                Console.WriteLine($"[{e.EndPoint}] is entering the world as [{character.Name}]");
+                Console.WriteLine($"[{e.EndPoint}] is entering the world as [{character.Name}] [slot: {packet.Slot}]");
             }
             else
             {
-                Console.WriteLine($"[{e.EndPoint}] tried to enter the world as [{character.Name}]: {flags}");
+                Console.WriteLine($"[{e.EndPoint}] tried to enter the world as [{character?.Name}] [slot: {packet.Slot}]: {flags}");
             }
         }
     }

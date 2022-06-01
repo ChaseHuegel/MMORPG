@@ -61,21 +61,12 @@ namespace MMORPG.Server.Util
 
         public static Character[] GetCharacterList(string username)
         {
-            List<string> guidStrings = new List<string>();
-
             //  Collect all GUIDs from the user's character list
-            //  TODO change this into a single query
-            for (int i = 1; i <= CharacterConstants.CHARACTER_SLOT_COUNT; i++)
-            {
-                QueryResult guidResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5)
-                    .GetRecord("characterLists", $"character{i}", "username", username);
-                
-                if (guidResult.Exists())
-                {
-                    string guidString = guidResult.Table.Rows[0][0].ToString();
-                    guidStrings.Add(guidString);
-                }
-            }
+            List<string> guidStrings = new List<string>();
+            QueryResult guidsResults = Database.Query("mmorpg", "127.0.0.1", 1433, 5).GetRecord("characterLists", "*", "username", username);
+            if (guidsResults.Exists())
+                for (int i = 1; i < guidsResults.Table.Columns.Count; i++)
+                    guidStrings.Add(guidsResults.Table.Rows[0][i]?.ToString());
             
             //  Collect all character names from respective GUIDs
             List<Character> characters = new List<Character>();
