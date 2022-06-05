@@ -5,6 +5,7 @@ using System.Linq;
 
 using Mmorpg.Enums;
 using Mmorpg.Shared.Data;
+using Swordfish.Library.Types;
 
 namespace MMORPG.Shared.Util
 {
@@ -12,13 +13,13 @@ namespace MMORPG.Shared.Util
     {
         private static ConcurrentDictionary<int, CharacterRace> CharacterRaces;
         private static ConcurrentDictionary<int, CharacterClass> CharacterClasses;
-        private static ConcurrentDictionary<int, List<int>> RaceClassCombinations;
+        private static ConcurrentDictionary<int, Bitmask> CharacterRaceClassCombinations;
 
         static Characters()
         {
             CharacterRaces = new ConcurrentDictionary<int, CharacterRace>();
             CharacterClasses = new ConcurrentDictionary<int, CharacterClass>();
-            RaceClassCombinations = new ConcurrentDictionary<int, List<int>>();
+            CharacterRaceClassCombinations = new ConcurrentDictionary<int, Bitmask>();
         }
 
         public static IEnumerable<CharacterRace> Races {
@@ -36,6 +37,19 @@ namespace MMORPG.Shared.Util
                 CharacterClasses.Clear();
                 foreach (CharacterClass characterClass in value)
                     CharacterClasses.TryAdd(characterClass.ID, characterClass);
+            }
+        }
+
+        public static IEnumerable<Bitmask> RaceClassCombinations {
+            get => CharacterRaceClassCombinations.Values;
+            set {
+                CharacterRaceClassCombinations.Clear();
+                int raceIndex = 1;
+                foreach (Bitmask classMask in value)
+                {
+                    CharacterRaceClassCombinations.TryAdd(raceIndex, classMask);
+                    raceIndex++;
+                }
             }
         }
 
@@ -59,14 +73,16 @@ namespace MMORPG.Shared.Util
 
         public static IEnumerable<CharacterClass> GetClassesForRace(int raceID)
         {
-            if (RaceClassCombinations.TryGetValue(raceID, out List<int> classIDs))
+            List<CharacterClass> classes = null;
+            if (CharacterRaceClassCombinations.TryGetValue(raceID, out Bitmask classMask))
             {
-                List<CharacterClass> classes = new List<CharacterClass>();
-                foreach (int classID in classIDs)
-                    classes.Add(CharacterClasses[classID]);
+                classes = new List<CharacterClass>();
+                for (int i = 0; i < classMask.Length; i++)
+                    if (classMask.Get(i))
+                        classes.Add(CharacterClasses[i+1]);
             }
             
-            return CharacterClasses.Values;
+            return classes ?? CharacterClasses.Values;
         }
 
         public static CreateCharacterFlags ValidateRaceClassCombination(CharacterRace chosenRace, CharacterClass chosenClass)

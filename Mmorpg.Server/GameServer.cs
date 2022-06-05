@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Net;
@@ -11,6 +12,7 @@ using Swordfish.Library.Networking.Packets;
 using Swordfish.Library.Util;
 using MMORPG.Shared.Util;
 using Mmorpg.Shared.Data;
+using Swordfish.Library.Types;
 
 namespace Mmorpg.Server
 {
@@ -49,7 +51,11 @@ namespace Mmorpg.Server
                     Name = racesResult.Table.Rows[i][1].ToString(),
                     Brief = racesResult.Table.Rows[i][2].ToString(),
                     Description = racesResult.Table.Rows[i][3].ToString(),
-                    ClassFlags = (int)racesResult.Table.Rows[i][4],
+                    //  TODO replace Bitmask usage with a new Bitflags class in Swordfish.
+                    //  TODO The system BitArray doesn't work on it's own since it doesn't convert cleanly.
+                    //  TODO It could be the basis of a Bitflags inheritor.
+                    //  A bitmask is an inverse operation; 'off' is considered true so we invert the value to behave like flags.
+                    ClassFlags = ~(int)racesResult.Table.Rows[i][4],
                 });
             }
             Characters.Races = races;
@@ -74,6 +80,13 @@ namespace Mmorpg.Server
             }
             Characters.Classes = classes;
             Console.WriteLine($"Classes: {string.Join(", ", classes.Select(x => x.Name))}");
+
+            //  Collect all race-class combinations
+            List<Bitmask> combinations = new List<Bitmask>();
+            foreach (CharacterRace race in races)
+                combinations.Add(race.ClassFlags);
+            
+            Characters.RaceClassCombinations = combinations;
         }
 
         public void Tick(float deltaTime)

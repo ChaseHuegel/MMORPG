@@ -1,5 +1,6 @@
 using Mmorpg.Packets;
 using Mmorpg.Shared.Data;
+using Mmorpg.Shared.Packets;
 using MMORPG.Shared.Util;
 
 namespace Mmorpg.ClientConsole
@@ -53,15 +54,8 @@ namespace Mmorpg.ClientConsole
                         Slot = Int32.Parse(arguments[1])
                     });
                     break;
-                case "races":
-                    Heartbeat.Client.Send(new RaceListPacket {});
-                    break;
-                case "classes":
-                    Heartbeat.Client.Send(new ClassListPacket {});
-                    break;
                 case "create":
-                    Heartbeat.Client.Send(new RaceListPacket {});
-                    Heartbeat.Client.Send(new ClassListPacket {});
+                    Heartbeat.Client.Send(new CharacterCreationRulesPacket {});
 
                     Console.WriteLine("-- Character Creation --");
                     Console.WriteLine("Type 'cancel' to exit");

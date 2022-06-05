@@ -83,7 +83,7 @@ namespace MMORPG.Server.Util
                         Race = (int)namesResult.Table.Rows[0]["race"],
                         Class = (int)namesResult.Table.Rows[0]["class"],
                     };
-                        
+                    
                     characters.Add(character);
                 }
                 else
