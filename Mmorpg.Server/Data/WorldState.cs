@@ -9,10 +9,12 @@ namespace Mmorpg.Server.Data
     {
         public ConcurrentDictionary<int, LivingEntity> Players = new ConcurrentDictionary<int, LivingEntity>();
         public ConcurrentDictionary<int, NPC> NPCs = new ConcurrentDictionary<int, NPC>();
+        
+        private Random Random { get; }
 
         public WorldState()
         {
-            Random random = new Random();
+            Random = new Random();
 
             AddNPC("Darin Blackbriar", "Guard Captain", 5, 5);
             AddNPC("Mira Hartsly", string.Empty, 1, 3);
@@ -32,7 +34,8 @@ namespace Mmorpg.Server.Data
                 Title = title,
                 ID = id,
                 X = x,
-                Z = z
+                Z = z,
+                Health = 10
             };
 
             NPCs.TryAdd(id, npc);

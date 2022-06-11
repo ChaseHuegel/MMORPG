@@ -10,6 +10,7 @@ namespace Mmorpg.Data
         public bool Moving;
         public int Race;
         public int Class;
+        public int Health;
 
         public override void Tick(float deltaTime)
         {

@@ -31,7 +31,8 @@ namespace Mmorpg.Server.Handlers
                     State = {
                         [0] = player.Jumped,
                         [1] = player.Moving
-                    }
+                    },
+                    Health = player.Health
                 };
 
                 server.BroadcastExcept(snapshot, e.Session);

@@ -23,5 +23,7 @@ namespace Mmorpg.Shared.Packets
         public float Direction;
 
         public MultiBool State;
+
+        public int Health;
     }
 }

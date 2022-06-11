@@ -38,5 +38,7 @@ namespace Mmorpg.Shared.Packets
         public int Race;
         
         public int Class;
+
+        public int Health;
     }
 }

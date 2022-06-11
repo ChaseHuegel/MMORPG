@@ -1,5 +1,7 @@
+using System;
 using Mmorpg.Packets;
 using Mmorpg.Shared.Data;
+using Mmorpg.Shared.Enums;
 using Mmorpg.Shared.Packets;
 using MMORPG.Shared.Util;
 
@@ -26,6 +28,13 @@ namespace Mmorpg.ClientConsole
                 case "say":
                     Heartbeat.Client.Send(new ChatPacket {
                         Message = string.Join(' ', arguments.Skip(1))
+                    });
+                    break;
+                case "attack":
+                    Heartbeat.Client.Send(new InteractPacket {
+                        Interaction = (int)Interactions.ABILITY,
+                        Value = 0,
+                        TargetEntity = Int32.Parse(arguments[1])
                     });
                     break;
                 case "register":

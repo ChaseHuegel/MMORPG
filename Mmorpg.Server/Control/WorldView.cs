@@ -20,8 +20,13 @@ namespace Mmorpg.Server.Control
 
         public WorldState State { get; private set; }
 
+        private Random Random { get; }
+
+        private ConcurrentQueue<AbilityRequest> AbilityQueue = new ConcurrentQueue<AbilityRequest>();
+
         public WorldView(GameServer server)
         {
+            Random = new Random();
             Server = server;
 
             State = new WorldState();
@@ -36,6 +41,17 @@ namespace Mmorpg.Server.Control
             LongTickTime += deltaTime;
             if (LongTickTime >= LongTickRate)
                 LongTickTime = 0f;
+            
+            while (AbilityQueue.TryDequeue(out AbilityRequest abilityRequest))
+            {
+                switch (abilityRequest.Ability)
+                {
+                    case 0:
+                        ((NPC)abilityRequest.Target).HasUpdated = true;
+                        abilityRequest.Target.Health -= Random.Next(4) + 1;
+                        break;
+                }
+            }
 
             foreach (NPC npc in State.NPCs.Values)
             {
@@ -62,7 +78,8 @@ namespace Mmorpg.Server.Control
                         State = {
                             [0] = player.Jumped,
                             [1] = player.Moving
-                        }
+                        },
+                        Health = player.Health
                     });
                 }
             }
@@ -74,7 +91,8 @@ namespace Mmorpg.Server.Control
                 ID = session.ID,
                 Name = character.Name,
                 Race = character.Race,
-                Class = character.Class
+                Class = character.Class,
+                Health = 10
             };
 
             //  Send a snapshot of the new player to all other players
@@ -94,11 +112,28 @@ namespace Mmorpg.Server.Control
                 Jumped = newPlayer.Jumped,
                 Moving = newPlayer.Moving,
                 Race = newPlayer.Race,
-                Class = newPlayer.Class
+                Class = newPlayer.Class,
+                Health = newPlayer.Health
             };
             Server.BroadcastExcept(snapshot, session);
 
             State.Players.TryAdd(newPlayer.ID, newPlayer);
+        }
+
+        public void QueueAbility(LivingEntity source, LivingEntity target, int ability)
+        {
+            AbilityQueue.Enqueue(new AbilityRequest {
+                Source = source,
+                Target = target,
+                Ability = ability
+            });
+        }
+
+        private class AbilityRequest
+        {
+            public LivingEntity Source;
+            public LivingEntity Target;
+            public int Ability;
         }
     }
 }

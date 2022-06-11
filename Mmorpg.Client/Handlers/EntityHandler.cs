@@ -28,6 +28,7 @@ namespace Mmorpg.Client.Handlers
             entity.Moving = packet.Moving;
             entity.Race = packet.Race;
             entity.Class = packet.Class;
+            entity.Health = packet.Health;
         }
     }
 }

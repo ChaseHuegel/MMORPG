@@ -34,7 +34,8 @@ namespace Mmorpg.Client.Handlers
                     Speed = packet.Speed,
                     Direction = packet.Direction,
                     Jumped = packet.State[0],
-                    Moving = packet.State[1]
+                    Moving = packet.State[1],
+                    Health = packet.Health
                 };
 
                 GameClient.Instance.Characters.TryAdd(packet.ID, character);

@@ -13,14 +13,13 @@ namespace Mmorpg.Server.Data
 
         public GameServer Server;
 
-        public bool HasUpdated { get; private set; }
+        public bool HasUpdated;
 
         public bool DoesWander;
         public NPC Wander(bool value) { DoesWander = value; return this; }
 
         public override void Tick(float deltaTime)
         {
-            HasUpdated = false;
             Timer += deltaTime;
             if (Timer >= 1f && DoesWander)
             {
@@ -43,6 +42,7 @@ namespace Mmorpg.Server.Data
 
             if (HasUpdated)
             {
+                HasUpdated = false;
                 Server.Broadcast(new EntitySnapshotPacket {
                     ID = ID,
                     X = X,
@@ -54,7 +54,8 @@ namespace Mmorpg.Server.Data
                     State = {
                         [0] = Jumped,
                         [1] = Moving
-                    }
+                    },
+                    Health = Health
                 });
             }
         }

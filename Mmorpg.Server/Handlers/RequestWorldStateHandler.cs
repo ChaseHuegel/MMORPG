@@ -30,7 +30,8 @@ namespace Mmorpg.Server.Handlers
                     Jumped = player.Jumped,
                     Moving = player.Moving,
                     Race = player.Race,
-                    Class = player.Class
+                    Class = player.Class,
+                    Health = player.Health
                 }, e.Session);
             }
 
@@ -53,7 +54,8 @@ namespace Mmorpg.Server.Handlers
                     Jumped = player.Jumped,
                     Moving = player.Moving,
                     Race = player.Race,
-                    Class = player.Class
+                    Class = player.Class,
+                    Health = player.Health
                 }, e.Session);
             }
         }
