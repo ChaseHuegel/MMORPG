@@ -1,15 +1,14 @@
-using System.Diagnostics;
 using System.Numerics;
-using System;
-using Mmorpg.Server.Data;
-using Mmorpg.Server.Util;
-using Mmorpg.Shared.Enums;
-using Mmorpg.Shared.Packets;
-using Swordfish.Library.Networking;
-using Swordfish.Library.Networking.Attributes;
-using Swordfish.Library.Util;
+
 using Mmorpg.Data;
 using Mmorpg.Server.Control;
+using Mmorpg.Server.Data;
+using Mmorpg.Shared.Enums;
+using Mmorpg.Shared.Packets;
+using Mmorpg.Shared.Util;
+
+using Swordfish.Library.Networking;
+using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Server.Handlers
 {
@@ -36,9 +35,10 @@ namespace Mmorpg.Server.Handlers
             WorldState worldState = worldView.State;
             
             //  Verify there is a target
-            if (!worldState.NPCs.TryGetValue(packet.TargetEntity, out NPC target))
+            if (!worldState.NPCs.TryGetValue(packet.Target, out NPC target))
                 flags |= InteractFlags.NO_TARGET;
             
+            //  TODO range should not be hardcoded
             //  Verify the target is in range
             if (worldState.Players.TryGetValue(e.Session.ID, out LivingEntity player) && target != null && MathUtils.DistanceUnsquared(new Vector3(player.X, player.Y, player.Z), new Vector3(target.X, target.Y, target.Z)) > 6)
                 flags |= InteractFlags.TOO_FAR_AWAY;
@@ -48,6 +48,7 @@ namespace Mmorpg.Server.Handlers
             if (!(target is NPC))
                 flags |= InteractFlags.INVALID_TARGET;
             
+            packet.Source = e.Session.ID;   //  ensure the source is the sender
             packet.Flags = (int)flags;
             server.Send(packet, e.Session);
             if (flags == InteractFlags.NONE)
@@ -56,6 +57,9 @@ namespace Mmorpg.Server.Handlers
                 //  TODO and validate that Player has access to it and it's ready to use (ie. off CD, not CCd, etc)
                 worldView.QueueAbility(player, target, packet.Value);
                 Console.WriteLine($"{player.Name} targets {target.Name} with {action}:{packet.Value}!");
+
+                //  Echo the interaction to all other players
+                server.BroadcastExcept(packet, e.Session);
             }
             else
             {

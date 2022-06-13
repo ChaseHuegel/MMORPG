@@ -6,7 +6,9 @@ namespace Mmorpg.Shared.Packets
     [Packet(RequiresSession = true)]
     public struct InteractPacket : ISerializedPacket
     {
-        public int TargetEntity;
+        public int Source;
+        
+        public int Target;
 
         public int Value;
 

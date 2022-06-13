@@ -18,11 +18,14 @@ namespace Mmorpg.Client.Handlers
 
             if (flags == InteractFlags.NONE)
             {
-                Console.WriteLine($"Action [{action}:{packet.Value}] succeeded.");
+                if (packet.Source == client.Session.ID)
+                    Console.WriteLine($"You interacted with {packet.Target}: [{action}:{packet.Value}].");
+                else
+                    Console.WriteLine($"{packet.Source} interacts with {packet.Target}: [{action}:{packet.Value}].");
             }
             else
             {
-                Console.WriteLine($"Action [{action}:{packet.Value}] failed: {flags}");
+                Console.WriteLine($"Interaction [{action}:{packet.Value}] with {packet.Target} failed: {flags}");
             }
         }
     }

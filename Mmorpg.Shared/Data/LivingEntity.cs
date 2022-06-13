@@ -1,4 +1,6 @@
-using System;
+using System.Numerics;
+
+using Mmorpg.Shared.Util;
 
 namespace Mmorpg.Data
 {
@@ -18,37 +20,10 @@ namespace Mmorpg.Data
 
             if (Moving)
             {
-                float[] direction = DirectionFromDegrees(Heading);
-                X += direction[0] * Speed * deltaTime;
-                Z += direction[1] * Speed * deltaTime;
+                Vector2 direction = MathUtils.DirectionFromDegrees(Heading);
+                X += direction.X * Speed * deltaTime;
+                Z += direction.Y * Speed * deltaTime;
             }
-        }
-
-        private const double DegToRad = Math.PI/180d;
-
-        private static float[] DirectionFromDegrees(float degrees)
-        {
-            float[] coords = new float[2];
-            double radians = degrees * DegToRad;
-
-            coords[0] = (float) Math.Cos(radians);
-            coords[1] = (float) Math.Sin(radians);
-
-            return coords;
-        }
-
-        private static float[] RotatePosition(float x, float y, double degrees)
-        {
-            float[] coords = new float[2];
-            double radians = degrees * DegToRad;
-
-            double ca = Math.Cos(radians);
-            double sa = Math.Sin(radians);
-
-            coords[0] = (float)(ca *x - sa*y);
-            coords[1] = (float)(sa *x + ca*y);
-
-            return coords;
         }
     }
 }

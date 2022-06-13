@@ -47,8 +47,12 @@ namespace Mmorpg.Server.Control
                 switch (abilityRequest.Ability)
                 {
                     case 0:
-                        ((NPC)abilityRequest.Target).HasUpdated = true;
-                        abilityRequest.Target.Health -= Random.Next(4) + 1;
+                        NPC npc = (NPC)abilityRequest.Target;
+                        npc.HasUpdated = true;
+                        npc.Health -= Random.Next(4) + 1;
+                        npc.IsAngry = true;
+                        npc.Target = abilityRequest.Source;
+                        Console.WriteLine($"{npc.Name} aggros {abilityRequest.Source.Name}!");
                         break;
                 }
             }

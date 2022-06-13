@@ -34,7 +34,7 @@ namespace Mmorpg.ClientConsole
                     Heartbeat.Client.Send(new InteractPacket {
                         Interaction = (int)Interactions.ABILITY,
                         Value = 0,
-                        TargetEntity = Int32.Parse(arguments[1])
+                        Target = Int32.Parse(arguments[1])
                     });
                     break;
                 case "register":
