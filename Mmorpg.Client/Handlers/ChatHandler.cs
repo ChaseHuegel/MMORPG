@@ -1,7 +1,10 @@
+using System;
+
+using Mmorpg.Packets;
+using Mmorpg.Shared.Enums;
+
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Mmorpg.Packets;
-using System;
 
 namespace Mmorpg.Client.Handlers
 {
@@ -10,7 +13,12 @@ namespace Mmorpg.Client.Handlers
         [ClientPacketHandler]
         public static void OnChatReceived(NetClient client, ChatPacket packet, NetEventArgs e)
         {
-            Console.WriteLine($"[CHAT] {packet.Sender}: {packet.Message}");
+            ChatFlags flags = (ChatFlags)packet.Flags;
+
+            if (flags == ChatFlags.None)
+                Console.WriteLine($"[CHAT] [{(ChatChannel)packet.Channel}] {packet.Sender}: {packet.Message}");
+            else
+                Console.WriteLine($"[CHAT] [{(ChatChannel)packet.Channel}] {flags}");
         }
     }
 }

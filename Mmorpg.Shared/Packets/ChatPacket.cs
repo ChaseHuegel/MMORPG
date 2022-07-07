@@ -9,6 +9,14 @@ namespace Mmorpg.Packets
     {
         public int Sender;
 
+        public int Target;
+
         public string Message;
+
+        //  TODO this should be an enum when they are supported
+        public int Channel;
+
+        //  TODO this should be an enum when they are supported
+        public int Flags;
     }
 }

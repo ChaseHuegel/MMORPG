@@ -30,28 +30,28 @@ namespace Mmorpg.Server.Handlers
         private static void ProcessAbility(NetServer server, InteractPacket packet, NetEventArgs e)
         {
             Interactions action = (Interactions)packet.Interaction;
-            InteractFlags flags = InteractFlags.NONE;
+            InteractFlags flags = InteractFlags.None;
             WorldView worldView = GameServer.Instance.WorldView;
             WorldState worldState = worldView.State;
             
             //  Verify there is a target
             if (!worldState.NPCs.TryGetValue(packet.Target, out NPC target))
-                flags |= InteractFlags.NO_TARGET;
+                flags |= InteractFlags.NoTarget;
             
             //  TODO range should not be hardcoded
             //  Verify the target is in range
             if (worldState.Players.TryGetValue(e.Session.ID, out LivingEntity player) && target != null && MathUtils.DistanceUnsquared(new Vector3(player.X, player.Y, player.Z), new Vector3(target.X, target.Y, target.Z)) > 6)
-                flags |= InteractFlags.TOO_FAR_AWAY;
+                flags |= InteractFlags.TooFarAway;
             
             //  Verify the target is valid
             //  TODO this should check against alignment, faction, and group
             if (!(target is NPC))
-                flags |= InteractFlags.INVALID_TARGET;
+                flags |= InteractFlags.InvalidTarget;
             
             packet.Source = e.Session.ID;   //  ensure the source is the sender
             packet.Flags = (int)flags;
             server.Send(packet, e.Session);
-            if (flags == InteractFlags.NONE)
+            if (flags == InteractFlags.None)
             {
                 //  TODO Value should be used to attempt locating a registered ability
                 //  TODO and validate that Player has access to it and it's ready to use (ie. off CD, not CCd, etc)

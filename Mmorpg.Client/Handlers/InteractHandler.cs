@@ -16,7 +16,7 @@ namespace Mmorpg.Client.Handlers
             Interactions action = (Interactions)packet.Interaction;
             InteractFlags flags = (InteractFlags)packet.Flags;
 
-            if (flags == InteractFlags.NONE)
+            if (flags == InteractFlags.None)
             {
                 if (packet.Source == client.Session.ID)
                     Console.WriteLine($"You interacted with {packet.Target}: [{action}:{packet.Value}].");
