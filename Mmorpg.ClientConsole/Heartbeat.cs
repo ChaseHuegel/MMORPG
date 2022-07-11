@@ -24,6 +24,7 @@ namespace Mmorpg.ClientConsole
         public void Start()
         {
             Client = new GameClient();
+            Client.Disconnected += OnDisconnected;
         }
 
         public void Stop()
@@ -39,6 +40,11 @@ namespace Mmorpg.ClientConsole
         private void UpdateTitle()
         {
             Console.Title = $"MMORPG Client | {TICK_RATE}/s | Connected: {Client.SessionCount > 0} | In game: {Client.Session.ID != NetSession.LocalOrUnassigned} | Session: {Client.Session}";
+        }
+
+        private void OnDisconnected(object sender, NetEventArgs e)
+        {
+            Console.WriteLine("Disconnected.");
         }
     }
 }

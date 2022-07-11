@@ -124,6 +124,11 @@ namespace Mmorpg.Server.Control
             State.Players.TryAdd(newPlayer.ID, newPlayer);
         }
 
+        public void RemovePlayer(NetSession session)
+        {
+            State.Players.TryRemove(session.ID, out _);
+        }
+
         public void QueueAbility(LivingEntity source, LivingEntity target, int ability)
         {
             AbilityQueue.Enqueue(new AbilityRequest {

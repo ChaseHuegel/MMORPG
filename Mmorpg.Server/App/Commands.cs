@@ -18,6 +18,9 @@ namespace Mmorpg.Server.App
                 case "list": case "players": case "sessions": case "connected":
                     Console.WriteLine("Server: " + string.Join(", ", Heartbeat.Server.GetSessions()));
                     break;
+                case "disconnect":
+                    GameServer.Instance.Disconnect();
+                    break;
             }
         }
     }

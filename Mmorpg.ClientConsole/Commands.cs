@@ -19,8 +19,12 @@ namespace Mmorpg.ClientConsole
 
             switch (arguments[0].ToLower())
             {
-                case "stop":
+                case "quit":
+                    Heartbeat.Client.Disconnect();
                     Application.Exit();
+                    break;
+                case "disconnect":
+                    Heartbeat.Client.Disconnect();
                     break;
                 case "sessions":
                     Console.WriteLine("Client: " + string.Join(", ", Heartbeat.Client.GetSessions()));

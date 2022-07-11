@@ -106,5 +106,13 @@ namespace Mmorpg.Server
 
             Console.WriteLine($"[{e.Session}] joined the game world as [{character.Name}].");
         }
+
+        public override void OnSessionEnded(object sender, NetEventArgs e)
+        {
+            Logins.TryRemove(e.EndPoint, out string username);
+            Players.TryRemove(e.EndPoint, out Character character);
+            WorldView.RemovePlayer(e.Session);
+            Console.WriteLine($"[{e.Session}] disconnected, logged out [{username}] as [{character.Name}].");
+        }
     }
 }
