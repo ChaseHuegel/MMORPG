@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swordfish.Library" Version="1.3.22" />
+    <PackageReference Include="Swordfish.Library" Version="1.3.25" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
 

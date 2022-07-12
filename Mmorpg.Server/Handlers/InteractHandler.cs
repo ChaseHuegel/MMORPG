@@ -1,6 +1,5 @@
 using System.Numerics;
 
-using Mmorpg.Data;
 using Mmorpg.Server.Control;
 using Mmorpg.Server.Data;
 using Mmorpg.Shared.Enums;
@@ -40,12 +39,12 @@ namespace Mmorpg.Server.Handlers
             
             //  TODO range should not be hardcoded
             //  Verify the target is in range
-            if (worldState.Players.TryGetValue(e.Session.ID, out LivingEntity player) && target != null && MathUtils.DistanceUnsquared(new Vector3(player.X, player.Y, player.Z), new Vector3(target.X, target.Y, target.Z)) > 6)
+            if (worldState.Players.TryGetValue(e.Session.ID, out Player player) && target != null && MathUtils.DistanceUnsquared(new Vector3(player.X, player.Y, player.Z), new Vector3(target.X, target.Y, target.Z)) > 6)
                 flags |= InteractFlags.TooFarAway;
             
             //  Verify the target is valid
             //  TODO this should check against alignment, faction, and group
-            if (!(target is NPC))
+            if (target.Health == 0)
                 flags |= InteractFlags.InvalidTarget;
             
             packet.Source = e.Session.ID;   //  ensure the source is the sender

@@ -1,11 +1,10 @@
 using System.Collections.Concurrent;
 
 using Mmorpg.Data;
-using Mmorpg.Packets;
 using Mmorpg.Server.Data;
+using Mmorpg.Shared.Enums;
 using Mmorpg.Shared.Packets;
 
-using Swordfish.Library.Diagnostics;
 using Swordfish.Library.Networking;
 
 namespace Mmorpg.Server.Control
@@ -47,12 +46,12 @@ namespace Mmorpg.Server.Control
                 switch (abilityRequest.Ability)
                 {
                     case 0:
-                        NPC npc = (NPC)abilityRequest.Target;
-                        npc.HasUpdated = true;
-                        npc.Health -= Random.Next(4) + 1;
-                        npc.IsAngry = true;
-                        npc.Target = abilityRequest.Source;
-                        Console.WriteLine($"{npc.Name} aggros {abilityRequest.Source.Name}!");
+                        abilityRequest.Target.Damage(
+                            Random.Next(4) + 1,
+                            EffectType.Bludgeoning,
+                            HealthChangeCause.Attacked,
+                            abilityRequest.Source
+                        );
                         break;
                 }
             }
@@ -63,7 +62,7 @@ namespace Mmorpg.Server.Control
                 npc.Tick(deltaTime);
             }
 
-            foreach (LivingEntity player in State.Players.Values)
+            foreach (Player player in State.Players.Values)
             {
                 //  Tick each player
                 player.Tick(deltaTime);
@@ -91,12 +90,13 @@ namespace Mmorpg.Server.Control
 
         public void AddPlayer(Character character, NetSession session)
         {
-            LivingEntity newPlayer = new LivingEntity {
+            Player newPlayer = new Player {
                 ID = session.ID,
                 Name = character.Name,
                 Race = character.Race,
                 Class = character.Class,
-                Health = 10
+                Health = 10,
+                MaxHealth = 10
             };
 
             //  Send a snapshot of the new player to all other players

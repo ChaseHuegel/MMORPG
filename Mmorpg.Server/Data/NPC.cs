@@ -1,6 +1,7 @@
 using System.Numerics;
 
 using Mmorpg.Data;
+using Mmorpg.Server.Control;
 using Mmorpg.Shared.Enums;
 using Mmorpg.Shared.Packets;
 using Mmorpg.Shared.Util;
@@ -25,6 +26,27 @@ namespace Mmorpg.Server.Data
 
         public bool DoesWander;
         public NPC Wander(bool value) { DoesWander = value; return this; }
+
+        protected override void OnHealthChanged(HealthChangeEventArgs e)
+        {
+            Chat.Broadcast($"{e.Source.Name} {e.Cause.ToString().ToLower()} {Name} for {Math.Abs(e.Amount)} {e.Type.ToString().ToLower()}.", ChatChannel.Combat);
+            
+            HasUpdated = true;
+            if (!IsAngry)
+            {
+                IsAngry = true;
+                Target = e.Source;
+                Chat.Broadcast($"{e.Source.Name} makes {Name} angry!", ChatChannel.Combat);
+            }
+        }
+
+        protected override void OnDeath(HealthChangeEventArgs e)
+        {
+            if (e.Source != null)
+                Chat.Broadcast($"{e.Source.Name} killed {Name}.", ChatChannel.Local);
+            else
+                Chat.Broadcast($"{Name} died.", ChatChannel.Local);
+        }
 
         public override void Tick(float deltaTime)
         {
@@ -70,7 +92,7 @@ namespace Mmorpg.Server.Data
                 if (distanceToTarget > 100)
                 {
                     //  Deaggro
-                    Console.WriteLine($"{Name} deaggros {Target.Name}.");
+                    Chat.Broadcast($"{Name} stops chasing {Target.Name}.", ChatChannel.Combat);
                     IsAngry = false;
                     Moving = false;
                     Target = null;
@@ -82,8 +104,7 @@ namespace Mmorpg.Server.Data
                     bool inRange = distanceToTarget <= 6;
                     if (inRange)
                     {
-                        Target.Health -= 1;
-                        Console.WriteLine($"{Name} attacks {Target.Name}!");
+                        Target.Damage(1, EffectType.Bludgeoning, HealthChangeCause.Attacked, this);
                         Server.Broadcast(new InteractPacket {
                             Source = ID,
                             Target = Target.ID,

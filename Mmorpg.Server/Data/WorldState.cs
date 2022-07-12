@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Mmorpg.Data;
 
 namespace Mmorpg.Server.Data
 {
@@ -7,7 +6,7 @@ namespace Mmorpg.Server.Data
     //  Hardcoded for testing
     public class WorldState
     {
-        public ConcurrentDictionary<int, LivingEntity> Players = new ConcurrentDictionary<int, LivingEntity>();
+        public ConcurrentDictionary<int, Player> Players = new ConcurrentDictionary<int, Player>();
         public ConcurrentDictionary<int, NPC> NPCs = new ConcurrentDictionary<int, NPC>();
         
         private Random Random { get; }
@@ -35,7 +34,9 @@ namespace Mmorpg.Server.Data
                 ID = id,
                 X = x,
                 Z = z,
-                Health = 10
+                Health = 10,
+                MaxHealth = 10,
+                Heading = Random.Next(360)
             };
 
             NPCs.TryAdd(id, npc);
