@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Diagnostics;
 using System.Collections.Concurrent;
 using System.Net;
 
-using Mmorpg.Data;
 using Mmorpg.Server.Control;
 using Mmorpg.Server.Data;
+using Mmorpg.Shared.Data;
+
+using MMORPG.Shared.Util;
+
 using Swordfish.Integrations.SQL;
 using Swordfish.Library.Networking;
+using Swordfish.Library.Networking.Handlers;
 using Swordfish.Library.Networking.Packets;
-using Swordfish.Library.Util;
-using MMORPG.Shared.Util;
-using Mmorpg.Shared.Data;
 using Swordfish.Library.Types;
+using Swordfish.Library.Util;
 
 namespace Mmorpg.Server
 {
@@ -32,7 +32,7 @@ namespace Mmorpg.Server
             Instance = this;
             MaxSessions = Configuration.Connection.MaxPlayers;
             
-            HandshakePacket.ValidateHandshakeCallback = ValidateHandshake;
+            HandshakeHandler.ValidateHandshakeCallback = ValidateHandshake;
             HandshakePacket.ValidationSignature = "Ekahsdnah";
 
             InitializeData();

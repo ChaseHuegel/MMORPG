@@ -1,10 +1,11 @@
+using Needlefish;
+
 using Swordfish.Library.Networking.Attributes;
-using Swordfish.Library.Networking.Interfaces;
 
 namespace Mmorpg.Shared.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct CharacterCreationRulesPacket : ISerializedPacket
+    public struct CharacterCreationRulesPacket : IDataBody
     {
         public string[] RaceNames;
 

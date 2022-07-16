@@ -1,11 +1,12 @@
+using Needlefish;
+
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Swordfish.Library.Networking.Interfaces;
 
 namespace Mmorpg.Shared.Packets
 {
     [Packet]
-    public struct EntityPacket : ISerializedPacket
+    public struct EntityPacket : IDataBody
     {
         public int ID;
 

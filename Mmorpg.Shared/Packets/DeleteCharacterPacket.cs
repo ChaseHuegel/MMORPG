@@ -1,11 +1,12 @@
+using Needlefish;
+
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Swordfish.Library.Networking.Interfaces;
 
 namespace Mmorpg.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct DeleteCharacterPacket : ISerializedPacket
+    public struct DeleteCharacterPacket : IDataBody
     {
         public int Slot;
 
