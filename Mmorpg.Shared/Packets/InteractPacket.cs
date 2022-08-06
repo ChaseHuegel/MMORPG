@@ -1,10 +1,10 @@
-using Needlefish;
+using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Shared.Packets
 {
     [Packet(RequiresSession = true)]
-    public struct InteractPacket : IDataBody
+    public class InteractPacket : Packet
     {
         public int Source;
         

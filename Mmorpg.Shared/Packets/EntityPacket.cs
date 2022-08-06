@@ -6,7 +6,7 @@ using Swordfish.Library.Networking.Attributes;
 namespace Mmorpg.Shared.Packets
 {
     [Packet]
-    public struct EntityPacket : IDataBody
+    public class EntityPacket : Packet
     {
         public int ID;
 

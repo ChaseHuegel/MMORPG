@@ -7,7 +7,7 @@ using Swordfish.Library.Types;
 namespace Mmorpg.Shared.Packets
 {
     [Packet(RequiresSession = true, Ordered = true)]
-    public struct MovementPacket : IDataBody
+    public class MovementPacket : Packet
     {
         public int ID;
 

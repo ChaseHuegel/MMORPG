@@ -6,7 +6,7 @@ using Swordfish.Library.Networking.Attributes;
 namespace Mmorpg.Packets
 {
     [Packet]
-    public struct ChatPacket : IDataBody
+    public class ChatPacket : Packet
     {
         public int Sender;
 

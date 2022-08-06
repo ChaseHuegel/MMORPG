@@ -6,7 +6,7 @@ using Swordfish.Library.Networking.Attributes;
 namespace Mmorpg.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct RegisterPacket : IDataBody
+    public class RegisterPacket : Packet
     {
         public string Username;
 

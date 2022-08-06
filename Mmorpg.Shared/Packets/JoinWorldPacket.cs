@@ -6,7 +6,7 @@ using Swordfish.Library.Networking.Attributes;
 namespace Mmorpg.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct JoinWorldPacket : IDataBody
+    public class JoinWorldPacket : Packet
     {
         public int Slot;
 

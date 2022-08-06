@@ -6,7 +6,7 @@ using Swordfish.Library.Networking.Attributes;
 namespace Mmorpg.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct DeleteCharacterPacket : IDataBody
+    public class DeleteCharacterPacket : Packet
     {
         public int Slot;
 

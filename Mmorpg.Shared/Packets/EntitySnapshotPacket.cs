@@ -7,7 +7,7 @@ using Swordfish.Library.Types;
 namespace Mmorpg.Shared.Packets
 {
     [Packet(RequiresSession = true, Ordered = true)]
-    public struct EntitySnapshotPacket : IDataBody
+    public class EntitySnapshotPacket : Packet
     {
         public int ID;
         

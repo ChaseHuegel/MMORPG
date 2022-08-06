@@ -1,12 +1,10 @@
-using Needlefish;
-
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Packets
 {
     [Packet(RequiresSession = false)]
-    public struct LoginPacket : IDataBody
+    public class LoginPacket : Packet
     {
         public string Username;
 
