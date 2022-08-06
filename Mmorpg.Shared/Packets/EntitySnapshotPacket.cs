@@ -1,8 +1,7 @@
-using Needlefish;
+using Needlefish.Types;
 
 using Swordfish.Library.Networking;
 using Swordfish.Library.Networking.Attributes;
-using Swordfish.Library.Types;
 
 namespace Mmorpg.Shared.Packets
 {
