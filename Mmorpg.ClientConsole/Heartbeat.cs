@@ -1,7 +1,9 @@
-using Swordfish.Library.Networking;
-using Swordfish.Library.Threading;
+using System.Net.Sockets;
 using Mmorpg.Client;
 using Mmorpg.Data;
+using Swordfish.Library.Networking;
+using Swordfish.Library.Threading;
+using Swordfish.Library.Util;
 
 namespace Mmorpg.ClientConsole
 {
@@ -23,7 +25,15 @@ namespace Mmorpg.ClientConsole
 
         public void Start()
         {
-            Client = new GameClient();
+            ClientConfig config = Config.Load<ClientConfig>("config/client.toml");
+            NetControllerSettings netControllerSettings = new()
+            {
+                AddressFamily = AddressFamily.InterNetwork,
+                DefaultHost = config.Connection.Host,
+                KeepAlive = TimeSpan.FromSeconds(10)
+            };
+
+            Client = new GameClient(netControllerSettings);
             Client.Disconnected += OnDisconnected;
         }
 

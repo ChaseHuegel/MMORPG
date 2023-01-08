@@ -5,7 +5,7 @@ using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Packets
 {
-    [Packet]
+    [Packet(RequiresSession = true, Reliable = true)]
     public class ChatPacket : Packet
     {
         public int Sender;

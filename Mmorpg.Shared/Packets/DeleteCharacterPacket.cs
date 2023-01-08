@@ -5,7 +5,7 @@ using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Packets
 {
-    [Packet(RequiresSession = false)]
+    [Packet(RequiresSession = false, Reliable = true)]
     public class DeleteCharacterPacket : Packet
     {
         public int Slot;

@@ -3,11 +3,11 @@ using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Shared.Packets
 {
-    [Packet(RequiresSession = true)]
+    [Packet(RequiresSession = true, Reliable = true)]
     public class InteractPacket : Packet
     {
         public int Source;
-        
+
         public int Target;
 
         public int Value;

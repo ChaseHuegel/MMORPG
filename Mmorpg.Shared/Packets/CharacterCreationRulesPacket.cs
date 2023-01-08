@@ -3,7 +3,7 @@ using Swordfish.Library.Networking.Attributes;
 
 namespace Mmorpg.Shared.Packets
 {
-    [Packet(RequiresSession = false)]
+    [Packet(RequiresSession = false, Reliable = true)]
     public class CharacterCreationRulesPacket : Packet
     {
         public string[] RaceNames;

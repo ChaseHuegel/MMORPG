@@ -8,8 +8,10 @@ namespace Mmorpg.Server
         public class ConnectionSettings
         {
             public int Port = 42420;
-            
+
             public int MaxPlayers = 300;
+
+            public TimeSpan SessionExpiration = TimeSpan.FromSeconds(30);
         }
     }
 }

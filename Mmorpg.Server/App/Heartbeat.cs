@@ -1,5 +1,7 @@
+using System.Net.Sockets;
 using Swordfish.Library.Networking;
 using Swordfish.Library.Threading;
+using Swordfish.Library.Util;
 
 namespace Mmorpg.Server.App
 {
@@ -21,7 +23,16 @@ namespace Mmorpg.Server.App
 
         public void Start()
         {
-            Server = new GameServer();
+            ServerConfig config = Config.Load<ServerConfig>("config/server.toml");
+            NetControllerSettings netControllerSettings = new()
+            {
+                AddressFamily = AddressFamily.InterNetwork,
+                Port = config.Connection.Port,
+                MaxSessions = config.Connection.MaxPlayers,
+                SessionExpiration = config.Connection.SessionExpiration
+            };
+
+            Server = new GameServer(netControllerSettings);
         }
 
         public void Stop()

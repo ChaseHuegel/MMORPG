@@ -18,20 +18,16 @@ namespace Mmorpg.Server
 {
     public class GameServer : NetServer
     {
-        private static ServerConfig s_Configuration;
-        public static ServerConfig Configuration => s_Configuration ?? (s_Configuration = Config.Load<ServerConfig>("config/server.toml"));
-
         public static GameServer Instance;
         public WorldView WorldView;
 
         public ConcurrentDictionary<EndPoint, Character> Players = new ConcurrentDictionary<EndPoint, Character>();
         public ConcurrentDictionary<EndPoint, string> Logins = new ConcurrentDictionary<EndPoint, string>();
 
-        public GameServer() : base(Configuration.Connection.Port)
+        public GameServer(NetControllerSettings settings) : base(settings)
         {
             Instance = this;
-            MaxSessions = Configuration.Connection.MaxPlayers;
-            
+
             HandshakeHandler.ValidateHandshakeCallback = ValidateHandshake;
             HandshakePacket.ValidationSignature = "Ekahsdnah";
 
@@ -46,7 +42,8 @@ namespace Mmorpg.Server
             QueryResult racesResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5).Select("*").From("races").GetResult();
             for (int i = 0; i < racesResult.Table.Rows.Count; i++)
             {
-                races.Add(new CharacterRace {
+                races.Add(new CharacterRace
+                {
                     ID = (int)racesResult.Table.Rows[i][0],
                     Name = racesResult.Table.Rows[i][1].ToString(),
                     Brief = racesResult.Table.Rows[i][2].ToString(),
@@ -66,7 +63,8 @@ namespace Mmorpg.Server
             QueryResult classesResult = Database.Query("mmorpg", "127.0.0.1", 1433, 5).Select("*").From("classes").GetResult();
             for (int i = 0; i < classesResult.Table.Rows.Count; i++)
             {
-                classes.Add(new CharacterClass {
+                classes.Add(new CharacterClass
+                {
                     ID = (int)classesResult.Table.Rows[i][0],
                     Name = classesResult.Table.Rows[i][1].ToString(),
                     AbilityFlags = (long)classesResult.Table.Rows[i][2],
@@ -85,7 +83,7 @@ namespace Mmorpg.Server
             List<Bitmask> combinations = new List<Bitmask>();
             foreach (CharacterRace race in races)
                 combinations.Add(race.ClassFlags);
-            
+
             Characters.RaceClassCombinations = combinations;
         }
 
