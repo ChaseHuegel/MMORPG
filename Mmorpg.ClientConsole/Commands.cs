@@ -4,6 +4,7 @@ using Mmorpg.Shared.Data;
 using Mmorpg.Shared.Enums;
 using Mmorpg.Shared.Packets;
 using MMORPG.Shared.Util;
+using Swordfish.Library.Networking;
 
 namespace Mmorpg.ClientConsole
 {
@@ -26,49 +27,63 @@ namespace Mmorpg.ClientConsole
                 case "disconnect":
                     Heartbeat.Client.Disconnect();
                     break;
+                case "stats":
+                    Console.WriteLine(Heartbeat.Client.Stats.Record);
+                    Heartbeat.Client.Stats.RequestInterval(TimeSpan.FromSeconds(60), intervalReceived);
+                    void intervalReceived(NetStatsRecord record)
+                    {
+                        Console.WriteLine($"Last 30 seconds: {record}");
+                    }
+                    break;
                 case "sessions":
                     Console.WriteLine("Client: " + string.Join(", ", Heartbeat.Client.GetSessions()));
                     break;
                 case "say":
-                    Heartbeat.Client.Send(new ChatPacket {
+                    Heartbeat.Client.Send(new ChatPacket
+                    {
                         Message = string.Join(' ', arguments.Skip(1))
                     });
                     break;
                 case "attack":
-                    Heartbeat.Client.Send(new InteractPacket {
+                    Heartbeat.Client.Send(new InteractPacket
+                    {
                         Interaction = (int)Interactions.ABILITY,
                         Value = 0,
                         Target = Int32.Parse(arguments[1])
                     });
                     break;
                 case "register":
-                    Heartbeat.Client.Send(new RegisterPacket {
+                    Heartbeat.Client.Send(new RegisterPacket
+                    {
                         Username = arguments[1],
                         Email = arguments[2],
                         Password = arguments[3]
                     });
                     break;
                 case "login":
-                    Heartbeat.Client.Send(new LoginPacket {
+                    Heartbeat.Client.Send(new LoginPacket
+                    {
                         Username = arguments[1],
                         Password = arguments[2]
                     });
                     break;
                 case "characters":
-                    Heartbeat.Client.Send(new CharacterListPacket {});
+                    Heartbeat.Client.Send(new CharacterListPacket { });
                     break;
                 case "enter":
-                    Heartbeat.Client.Send(new JoinWorldPacket {
+                    Heartbeat.Client.Send(new JoinWorldPacket
+                    {
                         Slot = Int32.Parse(arguments[1])
                     });
                     break;
                 case "delete":
-                    Heartbeat.Client.Send(new DeleteCharacterPacket {
+                    Heartbeat.Client.Send(new DeleteCharacterPacket
+                    {
                         Slot = Int32.Parse(arguments[1])
                     });
                     break;
                 case "create":
-                    Heartbeat.Client.Send(new CharacterCreationRulesPacket {});
+                    Heartbeat.Client.Send(new CharacterCreationRulesPacket { });
 
                     Console.WriteLine("-- Character Creation --");
                     Console.WriteLine("Type 'cancel' to exit");
@@ -94,7 +109,8 @@ namespace Mmorpg.ClientConsole
                     Console.WriteLine();
                     if (input.ToLower() == "cancel") return;
 
-                    Heartbeat.Client.Send(new CreateCharacterPacket {
+                    Heartbeat.Client.Send(new CreateCharacterPacket
+                    {
                         Name = chosenName,
                         Race = chosenRace.ID,
                         Class = chosenClass.ID,
