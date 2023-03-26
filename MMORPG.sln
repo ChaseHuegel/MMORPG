@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.Server", "mmorpg.ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mmorpg.Shared", "mmorpg.shared\Mmorpg.Shared.csproj", "{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Portal", "MMO.Portal\MMO.Portal.csproj", "{F7193499-4DDC-4162-B84E-686AC23AD0FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Bridge", "MMO.Bridge\MMO.Bridge.csproj", "{D88F86DB-73BC-40DE-8B94-8D6F632D8DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB09E14D-7B0C-43D6-8E96-CF4A814DACC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7193499-4DDC-4162-B84E-686AC23AD0FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7193499-4DDC-4162-B84E-686AC23AD0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7193499-4DDC-4162-B84E-686AC23AD0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7193499-4DDC-4162-B84E-686AC23AD0FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D88F86DB-73BC-40DE-8B94-8D6F632D8DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D88F86DB-73BC-40DE-8B94-8D6F632D8DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D88F86DB-73BC-40DE-8B94-8D6F632D8DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D88F86DB-73BC-40DE-8B94-8D6F632D8DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

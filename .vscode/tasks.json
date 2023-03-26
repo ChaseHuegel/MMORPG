@@ -62,6 +62,19 @@
                 "${workspaceFolder}/mmorpg.server/Mmorpg.Server.csproj"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+            "label": "Portal",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.portal/mmo.portal.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
