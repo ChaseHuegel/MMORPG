@@ -16,10 +16,12 @@ namespace MMO.Portal.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly PortalDbContext _context;
+        private readonly UserManager _userManager;
 
-        public AccountsController(PortalDbContext context)
+        public AccountsController(PortalDbContext context, UserManager userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -32,7 +34,7 @@ namespace MMO.Portal.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAccount(string user, string password, string email)
+        public async Task<IActionResult> CreateAccount(string user, string password, string email, string roles = null)
         {
             RegistrationFlags flags = RegistrationFlags.None;
             flags |= AccountValidation.CheckUser(user);
@@ -56,12 +58,50 @@ namespace MMO.Portal.Controllers
                 User = user,
                 Email = email,
                 Salt = Convert.ToBase64String(salt),
-                Hash = Convert.ToBase64String(hash)
+                Hash = Convert.ToBase64String(hash),
+                Roles = roles
             };
 
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
+            //  Sign in on account creation
+            await _userManager.SignInAsync(HttpContext, account, false);
+
+            return Ok();
+        }
+
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(string user, string password)
+        {
+            if (User.Identity.IsAuthenticated)
+                return Unauthorized(LoginFlags.AlreadyLoggedIn.ToString());
+
+            LoginFlags flags = LoginFlags.None;
+            Account account = await _context.Accounts.FindAsync(user);
+            if (account == null)
+                flags |= LoginFlags.IncorrectUser;
+
+            byte[] hash = Convert.FromBase64String(account.Hash);
+            byte[] salt = Convert.FromBase64String(account.Salt);
+            byte[] saltedPassword = Security.SaltedHash(Encoding.ASCII.GetBytes(password), salt);
+
+            if (!saltedPassword.SequenceEqual(hash))
+                flags |= LoginFlags.IncorrectPassword;
+
+            if (flags != LoginFlags.None)
+                return Unauthorized(flags.ToString());
+
+            await _userManager.SignInAsync(HttpContext, account, false);
+
+            return Ok();
+        }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _userManager.SignOutAsync(HttpContext);
             return Ok();
         }
 
