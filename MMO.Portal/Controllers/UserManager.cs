@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,6 +9,8 @@ namespace MMO.Portal.Controllers;
 public class UserManager
 {
     private readonly PortalDbContext _dbContext;
+
+    private static readonly ConcurrentDictionary<string, Account> LoggedInUsers = new();
 
     public UserManager(PortalDbContext dbContext)
     {
@@ -25,11 +28,26 @@ public class UserManager
             AllowRefresh = true,
             ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
         });
+
+        LoggedInUsers.TryAdd(account.User, account);
     }
 
     public async Task SignOutAsync(HttpContext httpContext)
     {
         await httpContext.SignOutAsync();
+        string userClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        LoggedInUsers.Remove(userClaim, out _);
+    }
+
+    public bool IsUserLoggedIn(string user)
+    {
+        return LoggedInUsers.ContainsKey(user);
+    }
+
+    public bool IsUserLoggedIn(ClaimsPrincipal principal)
+    {
+        string userClaim = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        return IsUserLoggedIn(userClaim);
     }
 
     private static IEnumerable<Claim> GetUserClaims(Account account)
@@ -37,22 +55,10 @@ public class UserManager
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, account.User),
-            new Claim(ClaimTypes.Email, account.Email)
         };
 
-        claims.AddRange(GetUserRoleClaims(account));
-        return claims;
-    }
-
-    private static IEnumerable<Claim> GetUserRoleClaims(Account user)
-    {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.User),
-        };
-
-        if (!string.IsNullOrWhiteSpace(user.Roles))
-            claims.Add(new Claim(ClaimTypes.Role, user.Roles));
+        if (!string.IsNullOrWhiteSpace(account.Roles))
+            claims.AddRange(account.Roles.Split(',').Select(x => new Claim(ClaimTypes.Role, x)));
 
         return claims;
     }

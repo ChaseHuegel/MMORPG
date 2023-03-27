@@ -32,6 +32,17 @@ namespace MMO.Portal.Controllers
             return accountList;
         }
 
+        [HttpGet("{user}")]
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult<Account>> GetAccount(string user)
+        {
+            Account account = await _context.Accounts.FindAsync(user);
+            if (account == null)
+                return NotFound();
+
+            return account;
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAccount(string user, string password, string email, string roles = null)
@@ -65,53 +76,16 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
-            //  Sign in on account creation
-            await _userManager.SignInAsync(HttpContext, account, false);
-
-            return Ok();
-        }
-
-        [HttpPost("Login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(string user, string password)
-        {
-            if (User.Identity.IsAuthenticated)
-                return Unauthorized(LoginFlags.AlreadyLoggedIn.ToString());
-
-            LoginFlags flags = LoginFlags.None;
-            Account account = await _context.Accounts.FindAsync(user);
-            if (account == null)
-                flags |= LoginFlags.IncorrectUser;
-
-            byte[] hash = Convert.FromBase64String(account.Hash);
-            byte[] salt = Convert.FromBase64String(account.Salt);
-            byte[] saltedPassword = Security.SaltedHash(Encoding.ASCII.GetBytes(password), salt);
-
-            if (!saltedPassword.SequenceEqual(hash))
-                flags |= LoginFlags.IncorrectPassword;
-
-            if (flags != LoginFlags.None)
-                return Unauthorized(flags.ToString());
-
-            await _userManager.SignInAsync(HttpContext, account, false);
-
-            return Ok();
-        }
-
-        [HttpPost("Logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await _userManager.SignOutAsync(HttpContext);
             return Ok();
         }
 
         [HttpDelete("{user}")]
         public async Task<IActionResult> DeleteAccount(string user)
         {
-            ClaimsPrincipal currentUser = User;
-            bool isAdmin = currentUser.IsInRole("admin");
+            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            bool isAdmin = User.IsInRole("admin");
 
-            if (currentUser.Identity.Name != user && !isAdmin)
+            if (userClaim != user && !isAdmin)
                 return Unauthorized();
 
             Account account = await _context.Accounts.FindAsync(user);
@@ -127,10 +101,10 @@ namespace MMO.Portal.Controllers
         [HttpPut("{user}")]
         public async Task<IActionResult> UpdateAccount(string user, string email, string password)
         {
-            ClaimsPrincipal currentUser = User;
-            bool isAdmin = currentUser.IsInRole("admin");
+            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            bool isAdmin = User.IsInRole("admin");
 
-            if (currentUser.Identity.Name != user && !isAdmin)
+            if (userClaim != user && !isAdmin)
                 return Unauthorized();
 
             Account account = await _context.Accounts.FindAsync(user);

@@ -7,10 +7,7 @@ using MMO.Portal.Models;
 var builder = WebApplication.CreateBuilder(args);
 var portalConnectionString = builder.Configuration.GetConnectionString("portal");
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -21,16 +18,14 @@ builder.Services.AddDbContextPool<PortalDbContext>(
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
-        options.LoginPath = "/api/Accounts/Login";
-        options.LogoutPath = "/api/Accounts/Logout";
+        options.LoginPath = "/api/Session/Login";
+        options.LogoutPath = "/api/Session/Logout";
+        options.Cookie.Name = "MMO.Portal.Login";
     });
 
 builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme);
-
-builder.Services.AddTransient<UserManager>();
-
+builder.Services.AddScoped<UserManager>();
 builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(portalConnectionString));
-// builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityDbContext>();
 
 var app = builder.Build();
 
