@@ -26,42 +26,16 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Client/Server",
+            "label": "Deploy",
             "dependsOn": [
-                "Server",
-                "Client"
+                "Portal",
+                "ChatServer"
             ],
             "dependsOrder": "parallel",
             "group": "build",
             "problemMatcher": [
                 "$tsc-watch"
             ]
-        },
-        {
-            "label": "Client",
-            "command": "dotnet",
-            "type": "process",
-            "group": "build",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/mmorpg.clientconsole/Mmorpg.ClientConsole.csproj"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "Server",
-            "command": "dotnet",
-            "type": "process",
-            "group": "build",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/mmorpg.server/Mmorpg.Server.csproj"
-            ],
-            "problemMatcher": "$msCompile"
         },
         {
             "label": "Portal",
@@ -73,6 +47,19 @@
                 "run",
                 "--project",
                 "${workspaceFolder}/mmo.portal/mmo.portal.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ChatServer",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.chatserver/mmo.chatserver.csproj"
             ],
             "problemMatcher": "$msCompile"
         },

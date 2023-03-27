@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MMO.Portal.Controllers;
 using MMO.Portal.Models;
@@ -24,8 +23,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme);
-builder.Services.AddScoped<UserManager>();
 builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(portalConnectionString));
+builder.Services.AddScoped<UserManager>();
+
+builder.Services.AddSingleton<ServerManager>();
 
 var app = builder.Build();
 
