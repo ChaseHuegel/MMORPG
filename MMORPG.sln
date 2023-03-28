@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Bridge", "MMO.Bridge\MM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.ChatServer", "MMO.ChatServer\MMO.ChatServer.csproj", "{0F9E0C1A-E993-44E9-9E06-7EAA58B273B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.ClusterServer", "MMO.ClusterServer\MMO.ClusterServer.csproj", "{144784BE-E931-4CDF-9C5C-CE2567B16511}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Servers.Core", "MMO.Servers.Core\MMO.Servers.Core.csproj", "{6E523908-6F30-4E77-B07A-CD7E19B4298D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +58,13 @@ Global
 		{0F9E0C1A-E993-44E9-9E06-7EAA58B273B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F9E0C1A-E993-44E9-9E06-7EAA58B273B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F9E0C1A-E993-44E9-9E06-7EAA58B273B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{144784BE-E931-4CDF-9C5C-CE2567B16511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{144784BE-E931-4CDF-9C5C-CE2567B16511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{144784BE-E931-4CDF-9C5C-CE2567B16511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{144784BE-E931-4CDF-9C5C-CE2567B16511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

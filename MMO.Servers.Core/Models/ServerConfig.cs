@@ -1,6 +1,6 @@
 using Swordfish.Library.Util;
 
-namespace MMO.ChatServer.Models;
+namespace MMO.Servers.Core.Models;
 
 public class ServerConfig : Config
 {

@@ -29,7 +29,8 @@
             "label": "Deploy",
             "dependsOn": [
                 "Portal",
-                "ChatServer"
+                "ChatServer",
+                "ClusterServer",
             ],
             "dependsOrder": "parallel",
             "group": "build",
@@ -60,6 +61,19 @@
                 "run",
                 "--project",
                 "${workspaceFolder}/mmo.chatserver/mmo.chatserver.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ClusterServer",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.clusterserver/mmo.clusterserver.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
