@@ -1,10 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Authentication;
 using MMO.Servers.Core.Models;
-using Swordfish.Library.Diagnostics;
 using Swordfish.Library.Networking;
-using Swordfish.Library.Networking.Handlers;
-using Swordfish.Library.Networking.Packets;
 using Swordfish.Library.Util;
 
 namespace MMO.Servers.Core;
@@ -15,21 +13,23 @@ public class ServerNode
 
     private NetServer NetServer;
 
+    private string? SessionCookie;
+
     private readonly Dictionary<Type, IPEndPoint> PacketRoutes = new();
 
-    public void Start(string[] args)
+    public async Task StartAsync(string[] args)
     {
         ServerConfig config = Config.Load<ServerConfig>("config/server.toml");
 
         InitializeNetController(config);
-        RegisterWithPortal(config);
+        await RegisterWithPortalAsync(config);
 
         Running = true;
     }
 
     public void Connect(IPEndPoint endPoint)
     {
-        NetServer.Connect(endPoint);
+        NetServer.Connect(endPoint, SessionCookie);
     }
 
     public void AddPacketRoute<TPacket>(IPEndPoint endPoint) where TPacket : Packet
@@ -49,14 +49,12 @@ public class ServerNode
             SessionExpiration = config.Connection.SessionExpiration
         };
 
-        Handshake.ValidateCallback = ValidateHandshake;
-        Handshake.ValidationSignature = "Ekahsdnah";
-
         NetServer = new NetServer(netControllerSettings);
         NetServer.PacketAccepted += OnPacketAccepted;
+        NetServer.HandshakeValidateCallback = HandshakeValidateCallback;
     }
 
-    private static void RegisterWithPortal(ServerConfig config)
+    private async Task RegisterWithPortalAsync(ServerConfig config)
     {
         var host = new Host
         {
@@ -65,14 +63,30 @@ public class ServerNode
         };
 
         HttpClient httpClient = new();
-        httpClient.PostAsync($"https://localhost:7297/api/Session/Login?user={config.Authentication.User}&password={config.Authentication.Password}", null).Wait();
-        httpClient.PostAsync($"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}", null).Wait();
+
+        //  Login to the portal
+        var loginResult = await httpClient.PostAsync($"https://localhost:7297/api/Session/Login?user={config.Authentication.User}&password={config.Authentication.Password}", null);
+        if (!loginResult.IsSuccessStatusCode)
+            throw new AuthenticationException();
+
+        SessionCookie = loginResult.Headers.SingleOrDefault(header => header.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase)).Value.SingleOrDefault();
+
+        //  Advertise this server via the portal
+        await httpClient.PostAsync($"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}", null);
     }
 
-    private static bool ValidateHandshake(EndPoint endPoint)
+    private bool HandshakeValidateCallback(EndPoint endPoint, string secret)
     {
-        //  TODO validate the endpoint has an associated login
-        return true;
+        HttpClient httpClient = new();
+        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", SessionCookie);
+
+        //  TODO this is just validating the cookie is real, not that they are who they claim to be.
+        //  TODO The /Authorize endpoint should be used and the secret be a combination of cookie + user claim.
+        var task = httpClient.PostAsync($"https://localhost:7297/api/Session/Validate", null);
+        task.Wait();
+        var loginResult = task.Result;
+
+        return loginResult.IsSuccessStatusCode;
     }
 
     private void OnPacketAccepted(object? sender, NetEventArgs e)

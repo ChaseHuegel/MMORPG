@@ -16,8 +16,8 @@ public class ServerConfig : Config
     public readonly RegistrationSettings Registration = new();
     public class RegistrationSettings
     {
-        public string Name = "Chat";
-        public string Type = "Chat";
+        public string Name = "";
+        public string Type = "";
     }
 
     public readonly AuthenticationSettings Authentication = new();

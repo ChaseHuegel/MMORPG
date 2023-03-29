@@ -4,6 +4,12 @@
     <ProjectReference Include="..\MMO.Servers.Core\MMO.Servers.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="config\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>

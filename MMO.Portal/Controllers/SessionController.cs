@@ -56,9 +56,15 @@ namespace MMO.Portal.Controllers
             return Ok();
         }
 
-        [HttpGet("Validate")]
+        [HttpPost("Validate")]
+        public IActionResult Validate()
+        {
+            return Ok();
+        }
+
+        [HttpPost("Authorize")]
         [AllowAnonymous]
-        public IActionResult Validate(string user)
+        public IActionResult Authorize(string user)
         {
             if (!User.Identity.IsAuthenticated)
                 return Unauthorized();

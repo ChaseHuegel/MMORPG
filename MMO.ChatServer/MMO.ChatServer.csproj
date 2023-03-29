@@ -11,4 +11,10 @@
     <ProjectReference Include="..\MMO.Servers.Core\MMO.Servers.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="config\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

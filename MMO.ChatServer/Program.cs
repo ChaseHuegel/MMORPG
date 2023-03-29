@@ -4,7 +4,7 @@ using Swordfish.Library.Networking;
 PacketManager.RegisterAssembly();
 
 var node = new ServerNode();
-node.Start(args);
+await node.StartAsync(args);
 
 while (node.Running)
 {

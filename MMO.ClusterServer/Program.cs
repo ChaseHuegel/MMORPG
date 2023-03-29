@@ -8,7 +8,7 @@ using Swordfish.Library.Networking;
 PacketManager.RegisterAssembly();
 
 var node = new ServerNode();
-node.Start(args);
+await node.StartAsync(args);
 
 //  Collect known servers from the portal
 var httpClient = new HttpClient();

@@ -11,7 +11,7 @@
             // "preLaunchTask": "build",
             "program": "${workspaceFolder}/mmo.clusterserver/bin/Debug/net6.0/mmo.clusterserver.exe",
             "args": [],
-            "cwd": "${workspaceFolder}/mmo.portal",
+            "cwd": "${workspaceFolder}/mmo.clusterserver",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "logging": {
