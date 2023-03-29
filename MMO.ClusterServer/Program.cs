@@ -10,8 +10,6 @@ PacketManager.RegisterAssembly();
 var node = new ServerNode();
 node.Start(args);
 
-Thread.Sleep(1000);
-
 //  Collect known servers from the portal
 var httpClient = new HttpClient();
 Server[]? servers = await httpClient.GetFromJsonAsync<Server[]>("https://localhost:7297/api/Servers");

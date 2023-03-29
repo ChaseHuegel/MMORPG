@@ -29,7 +29,7 @@ public class ServerNode
 
     public void Connect(IPEndPoint endPoint)
     {
-        NetServer.Send(HandshakePacket.New, endPoint);
+        NetServer.Connect(endPoint);
     }
 
     public void AddPacketRoute<TPacket>(IPEndPoint endPoint) where TPacket : Packet
@@ -49,8 +49,8 @@ public class ServerNode
             SessionExpiration = config.Connection.SessionExpiration
         };
 
-        HandshakeHandler.ValidateHandshakeCallback = ValidateHandshake;
-        HandshakePacket.ValidationSignature = "Ekahsdnah";
+        Handshake.ValidateCallback = ValidateHandshake;
+        Handshake.ValidationSignature = "Ekahsdnah";
 
         NetServer = new NetServer(netControllerSettings);
         NetServer.PacketAccepted += OnPacketAccepted;
