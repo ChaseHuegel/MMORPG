@@ -1,11 +1,12 @@
 ﻿using System.Net.Http.Json;
+using MMO.Bridge.Models;
 using MMO.Bridge.Packets;
+using MMO.Bridge.Util;
 using MMO.Servers.Core;
-using MMO.Servers.Core.Models;
-using MMO.Servers.Core.Util;
 using Swordfish.Library.Networking;
 
 PacketManager.RegisterAssembly();
+PacketManager.RegisterAssembly<ChatPacket>();
 
 var node = new ServerNode();
 await node.StartAsync(args);

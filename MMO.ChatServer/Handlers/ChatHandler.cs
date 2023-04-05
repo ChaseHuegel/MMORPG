@@ -41,7 +41,7 @@ public static class ChatHandler
         }
         else
         {
-            server.Broadcast(packet);
+            server.BroadcastExcept(packet, server.Session);
             Console.WriteLine($"[CHAT] [{channel}] {packet.Sender}: {packet.Message}");
         }
     }

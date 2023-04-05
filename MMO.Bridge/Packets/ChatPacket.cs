@@ -16,4 +16,15 @@ public class ChatPacket : Packet
     public int Channel;
 
     public string? Error;
+
+    public ChatPacket() { }
+
+    public ChatPacket(int sender, int target, string? message, int channel, string? error = null)
+    {
+        Sender = sender;
+        Target = target;
+        Message = message;
+        Channel = channel;
+        Error = error;
+    }
 }

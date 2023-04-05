@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using Swordfish.Library.Networking;
 
-namespace MMO.Servers.Core.Util;
+namespace MMO.Bridge.Util;
 
 public static class StringExtensions
 {

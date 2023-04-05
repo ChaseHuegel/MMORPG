@@ -1,4 +1,4 @@
-namespace MMO.Servers.Core.Models;
+namespace MMO.Bridge.Models;
 
 public struct Server
 {

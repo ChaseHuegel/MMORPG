@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using MMO.Servers.Core.Models;
+using Swordfish.Library.Diagnostics;
 using Swordfish.Library.Networking;
 using Swordfish.Library.Util;
 
@@ -96,13 +97,15 @@ public class ServerNode
         if (PacketRoutes.TryGetValue(packetType, out IPEndPoint? routeEndPoint))
         {
             //  If a route sent the packet, forward it to everyone else.
-            if (e.EndPoint == routeEndPoint)
+            if (e.EndPoint.Equals(routeEndPoint))
             {
+                Debugger.Log($"Routing packet from {e.Session} to clients.");
                 NetServer.BroadcastExcept(e.Packet, e.Session);
             }
             //  Else forward it to the route.
             else
             {
+                Debugger.Log($"Routing packet from {e.Session} to server {routeEndPoint}.");
                 NetServer.Send(e.Packet, routeEndPoint);
             }
         }

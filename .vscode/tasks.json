@@ -77,5 +77,18 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "Client",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.client/mmo.client.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
     ]
 }

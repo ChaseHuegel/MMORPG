@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.ClusterServer", "MMO.Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Servers.Core", "MMO.Servers.Core\MMO.Servers.Core.csproj", "{6E523908-6F30-4E77-B07A-CD7E19B4298D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Client", "MMO.Client\MMO.Client.csproj", "{060A2B18-A31A-4483-A4DB-D386BFA86EDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Bridge.Tests", "MMO.Bridge.Tests\MMO.Bridge.Tests.csproj", "{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,5 +70,13 @@ Global
 		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E523908-6F30-4E77-B07A-CD7E19B4298D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060A2B18-A31A-4483-A4DB-D386BFA86EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060A2B18-A31A-4483-A4DB-D386BFA86EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060A2B18-A31A-4483-A4DB-D386BFA86EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060A2B18-A31A-4483-A4DB-D386BFA86EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
