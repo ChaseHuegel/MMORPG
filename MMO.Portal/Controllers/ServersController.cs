@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MMO.Portal.Managers;
 using MMO.Portal.Models;
 
 namespace MMO.Portal.Controllers

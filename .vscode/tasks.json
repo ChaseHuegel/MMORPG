@@ -29,6 +29,7 @@
             "label": "Deploy",
             "dependsOn": [
                 "Portal",
+                "DataServer",
                 "ChatServer",
                 "ClusterServer",
             ],
@@ -87,6 +88,19 @@
                 "run",
                 "--project",
                 "${workspaceFolder}/mmo.client/mmo.client.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "DataServer",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.dataserver/mmo.dataserver.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

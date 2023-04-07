@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Client", "MMO.Client\MM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.Bridge.Tests", "MMO.Bridge.Tests\MMO.Bridge.Tests.csproj", "{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMO.DataServer", "MMO.DataServer\MMO.DataServer.csproj", "{FF74E6EB-7299-4C3F-8402-6269596086F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A41C237-12C7-4ED4-852B-5FD60F95A8AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF74E6EB-7299-4C3F-8402-6269596086F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF74E6EB-7299-4C3F-8402-6269596086F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF74E6EB-7299-4C3F-8402-6269596086F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF74E6EB-7299-4C3F-8402-6269596086F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

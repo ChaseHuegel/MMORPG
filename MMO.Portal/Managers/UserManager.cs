@@ -2,9 +2,10 @@ using System.Collections.Concurrent;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MMO.Portal.Data;
 using MMO.Portal.Models;
 
-namespace MMO.Portal.Controllers;
+namespace MMO.Portal.Managers;
 
 public class UserManager
 {

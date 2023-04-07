@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MMO.Portal.Models;
 
-namespace MMO.Portal.Models;
+namespace MMO.Portal.Data;
 
 public partial class PortalDbContext : DbContext
 {

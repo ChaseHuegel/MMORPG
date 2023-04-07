@@ -1,16 +1,20 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using MMO.Portal.Data;
-using MMO.Portal.Managers;
+using MMO.DataServer.Data;
+using MMO.DataServer.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var portalConnectionString = builder.Configuration.GetConnectionString("portal");
+
+var authServerUrl = builder.Configuration.GetValue<string>("authenticationServerUrl");
+var authServerCookie = builder.Configuration.GetValue<string>("authenticationCookie");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContextPool<PortalDbContext>(
+builder.Services.AddDbContextPool<CharactersDbContext>(
     options => options.UseMySql(portalConnectionString, ServerVersion.AutoDetect(portalConnectionString))
 );
 
@@ -20,15 +24,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             options.LoginPath = "/api/Session/Login";
             options.LogoutPath = "/api/Session/Logout";
-            options.Cookie.Name = "MMO.Portal.Login";
+            options.Cookie.Name = "MMO.DataServer.Login";
         }
-    );
+    )
+    .AddRemoteScheme<RemoteAuthenticationOptions, PortalAuthenticationHandler>("portal", "PortalRemoteAuth", RemoteAuthenticationOptionsFactory);
 
-builder.Services.AddAuthentication(options => options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme);
-builder.Services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(portalConnectionString));
-builder.Services.AddScoped<UserManager>();
-
-builder.Services.AddSingleton<ServerManager>();
+void RemoteAuthenticationOptionsFactory(RemoteAuthenticationOptions options)
+{
+    options.CallbackPath = "/api/Session/Login";
+}
 
 var app = builder.Build();
 

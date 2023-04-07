@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
-namespace MMO.Portal.Models;
+using MMO.Portal.Models;
+
+namespace MMO.Portal.Managers;
 
 public class ServerManager
 {

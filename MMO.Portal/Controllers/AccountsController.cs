@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MMO.Bridge.Types;
 using MMO.Bridge.Util;
+using MMO.Portal.Data;
+using MMO.Portal.Managers;
 using MMO.Portal.Models;
 using Swordfish.Library.Util;
 

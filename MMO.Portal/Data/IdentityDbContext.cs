@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MMO.Portal.Models;
+namespace MMO.Portal.Data;
 
 public partial class IdentityDbContext : IdentityDbContext<IdentityUser>
 {

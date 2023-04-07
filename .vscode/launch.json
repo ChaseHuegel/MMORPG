@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             // "preLaunchTask": "build",
-            "program": "${workspaceFolder}/mmo.clusterserver/bin/Debug/net6.0/mmo.clusterserver.exe",
+            "program": "${workspaceFolder}/mmo.dataserver/bin/Debug/net7.0/mmo.dataserver.exe",
             "args": [],
-            "cwd": "${workspaceFolder}/mmo.clusterserver",
+            "cwd": "${workspaceFolder}/mmo.dataserver",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "logging": {

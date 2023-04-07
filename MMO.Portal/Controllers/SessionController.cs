@@ -1,8 +1,11 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MMO.Bridge.Types;
+using MMO.Portal.Data;
+using MMO.Portal.Managers;
 using MMO.Portal.Models;
 using Swordfish.Library.Util;
 
@@ -59,7 +62,13 @@ namespace MMO.Portal.Controllers
         [HttpPost("Validate")]
         public IActionResult Validate()
         {
-            return Ok();
+            using var stream = new MemoryStream();
+            using var writer = new BinaryWriter(stream);
+            HttpContext.User.WriteTo(writer);
+            byte[] buffer = new byte[stream.Length];
+            stream.Read(buffer);
+            var encodedPrincipal = Convert.ToBase64String(buffer);
+            return Content(string.Join(';', HttpContext.User.Claims.Select(x => x.ToString())));
         }
 
         [HttpPost("Authorize")]
