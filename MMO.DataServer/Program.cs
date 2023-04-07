@@ -1,38 +1,58 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MMO.DataServer.Data;
-using MMO.DataServer.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var portalConnectionString = builder.Configuration.GetConnectionString("portal");
 
-var authServerUrl = builder.Configuration.GetValue<string>("authenticationServerUrl");
-var authServerCookie = builder.Configuration.GetValue<string>("authenticationCookie");
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.Authority = builder.Configuration.GetValue<string>("JWT:Authority");
+        options.Audience = builder.Configuration.GetValue<string>("JWT:Audience");
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetValue<string>("JWT:Key"))),
+            ValidIssuer = builder.Configuration.GetValue<string>("JWT:Issuer"),
+            ValidAudience = builder.Configuration.GetValue<string>("JWT:Audience")
+        };
+    });
 
 builder.Services.AddDbContextPool<CharactersDbContext>(
     options => options.UseMySql(portalConnectionString, ServerVersion.AutoDetect(portalConnectionString))
 );
-
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-        options =>
-        {
-            options.LoginPath = "/api/Session/Login";
-            options.LogoutPath = "/api/Session/Logout";
-            options.Cookie.Name = "MMO.DataServer.Login";
-        }
-    )
-    .AddRemoteScheme<RemoteAuthenticationOptions, PortalAuthenticationHandler>("portal", "PortalRemoteAuth", RemoteAuthenticationOptionsFactory);
-
-void RemoteAuthenticationOptionsFactory(RemoteAuthenticationOptions options)
-{
-    options.CallbackPath = "/api/Session/Login";
-}
 
 var app = builder.Build();
 
