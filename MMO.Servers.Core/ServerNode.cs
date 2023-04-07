@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using MMO.Servers.Core.Models;
@@ -14,7 +15,7 @@ public class ServerNode
 
     private NetServer NetServer;
 
-    private string? SessionCookie;
+    private string? JwtToken;
 
     private readonly Dictionary<Type, IPEndPoint> PacketRoutes = new();
 
@@ -30,7 +31,7 @@ public class ServerNode
 
     public void Connect(IPEndPoint endPoint)
     {
-        NetServer.Connect(endPoint, SessionCookie);
+        NetServer.Connect(endPoint, JwtToken);
     }
 
     public void AddPacketRoute<TPacket>(IPEndPoint endPoint) where TPacket : Packet
@@ -70,7 +71,8 @@ public class ServerNode
         if (!loginResult.IsSuccessStatusCode)
             throw new AuthenticationException();
 
-        SessionCookie = loginResult.Headers.SingleOrDefault(header => header.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase)).Value.SingleOrDefault();
+        JwtToken = await loginResult.Content.ReadAsStringAsync();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JwtToken);
 
         //  Advertise this server via the portal
         await httpClient.PostAsync($"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}", null);
@@ -79,10 +81,8 @@ public class ServerNode
     private bool HandshakeValidateCallback(EndPoint endPoint, string secret)
     {
         HttpClient httpClient = new();
-        httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", SessionCookie);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", secret);
 
-        //  TODO this is just validating the cookie is real, not that they are who they claim to be.
-        //  TODO The /Authorize endpoint should be used and the secret be a combination of cookie + user claim.
         var task = httpClient.PostAsync($"https://localhost:7297/api/Session/Validate", null);
         task.Wait();
         var loginResult = task.Result;
