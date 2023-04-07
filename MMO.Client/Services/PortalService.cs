@@ -21,9 +21,8 @@ namespace MMO.Client.Services
             if (!loginResult.IsSuccessStatusCode)
                 throw new AuthenticationException();
 
-            var sessionCookie = loginResult.Headers.SingleOrDefault(header => header.Key.Equals("Set-Cookie", StringComparison.OrdinalIgnoreCase)).Value.SingleOrDefault();
-
-            return sessionCookie;
+            var jwtToken = await loginResult.Content.ReadAsStringAsync();
+            return jwtToken;
         }
 
         public async Task<Server[]> GetServersAsync()
