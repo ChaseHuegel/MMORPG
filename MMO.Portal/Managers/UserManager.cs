@@ -1,43 +1,52 @@
 using System.Collections.Concurrent;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using MMO.Portal.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using MMO.Portal.Models;
 
 namespace MMO.Portal.Managers;
 
 public class UserManager
 {
-    private readonly PortalDbContext _dbContext;
+    private readonly ConfigurationManager _configuration;
 
     private static readonly ConcurrentDictionary<string, Account> LoggedInUsers = new();
 
-    public UserManager(PortalDbContext dbContext)
+    public UserManager(ConfigurationManager configuration)
     {
-        _dbContext = dbContext;
+        _configuration = configuration;
     }
 
-    public async Task SignInAsync(HttpContext httpContext, Account account, bool isPersistent = false)
+    public Task<string> SignInAsync(Account account)
     {
-        var identity = new ClaimsIdentity(GetUserClaims(account), CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
+        var identity = new ClaimsIdentity(GetUserClaims(account), JwtBearerDefaults.AuthenticationScheme);
 
-        await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties
+        var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWT:Key"));
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            IsPersistent = isPersistent,
-            AllowRefresh = true,
-            ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24)
-        });
+            Issuer = _configuration.GetValue<string>("JWT:Issuer"),
+            Audience = _configuration.GetValue<string>("JWT:Audience"),
+            Subject = identity,
+            Expires = DateTime.UtcNow.AddHours(24),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
 
         LoggedInUsers.TryAdd(account.User, account);
+
+        return Task.FromResult(tokenString);
     }
 
-    public async Task SignOutAsync(HttpContext httpContext)
+    public Task SignOutAsync(Account account)
     {
-        await httpContext.SignOutAsync();
-        string userClaim = httpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-        LoggedInUsers.Remove(userClaim, out _);
+        LoggedInUsers.Remove(account.User, out _);
+        return Task.CompletedTask;
     }
 
     public bool IsUserLoggedIn(string user)

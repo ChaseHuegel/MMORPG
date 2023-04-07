@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MMO.Bridge.Types;
@@ -47,41 +46,25 @@ namespace MMO.Portal.Controllers
             if (flags != LoginFlags.None)
                 return Unauthorized(flags.ToString());
 
-            await _userManager.SignInAsync(HttpContext, account, false);
+            var token = await _userManager.SignInAsync(account);
 
-            return Ok();
+            return Ok(token);
         }
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await _userManager.SignOutAsync(HttpContext);
+            string user = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            Account account = await _context.Accounts.FindAsync(user);
+
+            await _userManager.SignOutAsync(account);
+
             return Ok();
         }
 
         [HttpPost("Validate")]
         public IActionResult Validate()
         {
-            using var stream = new MemoryStream();
-            using var writer = new BinaryWriter(stream);
-            HttpContext.User.WriteTo(writer);
-            byte[] buffer = new byte[stream.Length];
-            stream.Read(buffer);
-            var encodedPrincipal = Convert.ToBase64String(buffer);
-            return Content(string.Join(';', HttpContext.User.Claims.Select(x => x.ToString())));
-        }
-
-        [HttpPost("Authorize")]
-        [AllowAnonymous]
-        public IActionResult Authorize(string user)
-        {
-            if (!User.Identity.IsAuthenticated)
-                return Unauthorized();
-
-            string userInCookie = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            if (userInCookie != user)
-                return Unauthorized();
-
             return Ok();
         }
     }
