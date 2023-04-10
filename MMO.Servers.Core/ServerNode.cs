@@ -48,7 +48,8 @@ public class ServerNode
             AddressFamily = AddressFamily.InterNetwork,
             Port = config.Connection.Port,
             MaxSessions = config.Connection.MaxSessions,
-            SessionExpiration = config.Connection.SessionExpiration
+            SessionExpiration = config.Connection.SessionExpiration,
+            KeepAlive = TimeSpan.FromSeconds(10),
         };
 
         NetServer = new NetServer(netControllerSettings);
@@ -64,7 +65,11 @@ public class ServerNode
             Port = config.Connection.Port
         };
 
-        HttpClient httpClient = new();
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+        };
+        HttpClient httpClient = new(handler);
 
         //  Login to the portal
         var loginResult = await httpClient.PostAsync($"https://localhost:7297/api/Session/Login?user={config.Authentication.User}&password={config.Authentication.Password}", null);
@@ -80,7 +85,11 @@ public class ServerNode
 
     private bool HandshakeValidateCallback(EndPoint endPoint, string secret)
     {
-        HttpClient httpClient = new();
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+        };
+        HttpClient httpClient = new(handler);
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", secret);
 
         var task = httpClient.PostAsync($"https://localhost:7297/api/Session/Validate", null);

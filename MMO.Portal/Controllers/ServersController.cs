@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MMO.Portal.Managers;
 using MMO.Portal.Models;
+using MMO.Portal.Util;
 
 namespace MMO.Portal.Controllers
 {
@@ -35,6 +36,8 @@ namespace MMO.Portal.Controllers
             };
 
             _serverManager.Servers.Add(server);
+
+            Console.WriteLine($"Server '{type}:{name}@{address}' was registered by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
             return Ok();
         }
     }

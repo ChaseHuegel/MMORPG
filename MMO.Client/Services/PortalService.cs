@@ -40,7 +40,12 @@ namespace MMO.Client.Services
 
         private static HttpClient HttpClientFactory()
         {
-            return new HttpClient();
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+            };
+            var client = new HttpClient(handler);
+            return client;
         }
     }
 }

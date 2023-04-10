@@ -6,6 +6,7 @@ using MMO.Bridge.Types;
 using MMO.Portal.Data;
 using MMO.Portal.Managers;
 using MMO.Portal.Models;
+using MMO.Portal.Util;
 using Swordfish.Library.Util;
 
 namespace MMO.Portal.Controllers
@@ -48,23 +49,26 @@ namespace MMO.Portal.Controllers
 
             var token = await _userManager.SignInAsync(account);
 
+            Console.WriteLine($"User '{user}' logged in. [{HttpContext.Connection}]");
             return Ok(token);
         }
 
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            string user = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            string user = HttpContext.User.GetUserClaim();
             Account account = await _context.Accounts.FindAsync(user);
 
             await _userManager.SignOutAsync(account);
 
+            Console.WriteLine($"User '{user}' logged out. [{HttpContext.Connection}]");
             return Ok();
         }
 
         [HttpPost("Validate")]
         public IActionResult Validate()
         {
+            Console.WriteLine($"User '{HttpContext.User.GetUserClaim()}' was validated. [{HttpContext.Connection}]");
             return Ok();
         }
     }

@@ -9,9 +9,9 @@
             "type": "coreclr",
             "request": "launch",
             // "preLaunchTask": "build",
-            "program": "${workspaceFolder}/mmo.dataserver/bin/Debug/net7.0/mmo.dataserver.exe",
+            "program": "${workspaceFolder}/mmo.portal/bin/Debug/net7.0/mmo.portal.exe",
             "args": [],
-            "cwd": "${workspaceFolder}/mmo.dataserver",
+            "cwd": "${workspaceFolder}/mmo.portal",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "logging": {

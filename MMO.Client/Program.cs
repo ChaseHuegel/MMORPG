@@ -13,7 +13,7 @@ var netClientSettings = new NetControllerSettings
 };
 var netClient = new NetClient(netClientSettings);
 
-var portalService = new PortalService("https://192.168.1.232:7297");
+var portalService = new PortalService("https://localhost:7297");
 
 var commandParser = new CommandParser(
     indicator: '\0',
@@ -25,5 +25,5 @@ var commandParser = new CommandParser(
 while (true)
 {
     string? input = Console.ReadLine();
-    await commandParser.TryRunAsync(input);
+    _ = await commandParser.TryRunAsync(input);
 }

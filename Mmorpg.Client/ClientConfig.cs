@@ -10,7 +10,8 @@ namespace Mmorpg.Client
         public ConnectionSettings Connection = new ConnectionSettings();
         public class ConnectionSettings
         {
-            public Host Host => new Host {
+            public Host Host => new Host
+            {
                 Address = IPAddress.TryParse(Address, out IPAddress address) ? address : IPAddress.None,
                 Hostname = Hostname,
                 Port = Port

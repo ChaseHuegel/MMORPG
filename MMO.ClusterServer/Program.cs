@@ -12,7 +12,11 @@ var node = new ServerNode();
 await node.StartAsync(args);
 
 //  Collect known servers from the portal
-var httpClient = new HttpClient();
+var handler = new HttpClientHandler
+{
+    ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+};
+var httpClient = new HttpClient(handler);
 Server[]? servers = await httpClient.GetFromJsonAsync<Server[]>("https://localhost:7297/api/Servers");
 
 //  Find a chat server and connect to it

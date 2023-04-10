@@ -8,6 +8,7 @@ using MMO.Bridge.Util;
 using MMO.Portal.Data;
 using MMO.Portal.Managers;
 using MMO.Portal.Models;
+using MMO.Portal.Util;
 using Swordfish.Library.Util;
 
 namespace MMO.Portal.Controllers
@@ -78,13 +79,14 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
+            Console.WriteLine($"Account '{user}' created for '{email}' with roles: '{roles}'. [{HttpContext.Connection}]");
             return Ok();
         }
 
         [HttpDelete("{user}")]
         public async Task<IActionResult> DeleteAccount(string user)
         {
-            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            string userClaim = User.GetUserClaim();
             bool isAdmin = User.IsInRole("admin");
 
             if (userClaim != user && !isAdmin)
@@ -97,13 +99,14 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
 
+            Console.WriteLine($"Account '{user}' was deleted by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
             return Ok();
         }
 
         [HttpPut("{user}")]
         public async Task<IActionResult> UpdateAccount(string user, string email, string password)
         {
-            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            string userClaim = User.GetUserClaim();
             bool isAdmin = User.IsInRole("admin");
 
             if (userClaim != user && !isAdmin)
@@ -132,6 +135,7 @@ namespace MMO.Portal.Controllers
             _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
+            Console.WriteLine($"Account '{user}' was updated by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
             return Ok();
         }
 

@@ -7,6 +7,7 @@ using MMO.Bridge.Util;
 using MMO.Portal.Data;
 using MMO.Portal.Managers;
 using MMO.Portal.Models;
+using MMO.Portal.Util;
 
 namespace MMO.Portal.Controllers
 {
@@ -27,7 +28,7 @@ namespace MMO.Portal.Controllers
         [HttpGet("Info")]
         public async Task<ActionResult<Account>> GetAccountInfo()
         {
-            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userClaim = User.GetUserClaim();
             if (userClaim == null)
                 return NotFound();
 
@@ -41,7 +42,7 @@ namespace MMO.Portal.Controllers
         [HttpPut("ChangeEmail")]
         public async Task<IActionResult> UpdateEmail(string email)
         {
-            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userClaim = User.GetUserClaim();
             if (userClaim == null)
                 return NotFound();
 
@@ -70,7 +71,7 @@ namespace MMO.Portal.Controllers
         [HttpPut("ChangePassword")]
         public async Task<IActionResult> UpdatePassword(string password)
         {
-            string userClaim = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userClaim = User.GetUserClaim();
             if (userClaim == null)
                 return NotFound();
 

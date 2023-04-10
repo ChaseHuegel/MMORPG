@@ -19,7 +19,11 @@ public class PortalAuthenticationHandler : RemoteAuthenticationHandler<RemoteAut
         if (cookie == null)
             return HandleRequestResult.Fail("Portal authentication cookie not found.");
 
-        var httpClient = new HttpClient();
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+        };
+        var httpClient = new HttpClient(handler);
         httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Cookie", "MMO.Portal.Login=" + cookie);
         var validateResponse = await httpClient.PostAsync("https://localhost:7297/api/Session/Validate", null);
 
