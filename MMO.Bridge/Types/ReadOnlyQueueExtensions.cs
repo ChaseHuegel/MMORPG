@@ -23,7 +23,11 @@ public static class ReadOnlyQueueExtensions
         return queue.Take().Equals(expected, StringComparison.CurrentCulture);
     }
 
-    public static bool AssertTake(this ReadOnlyQueue<string> queue, string expected, StringComparison comparison)
+    public static bool AssertTake(
+        this ReadOnlyQueue<string> queue,
+        string expected,
+        StringComparison comparison
+    )
     {
         return queue.Take().Equals(expected, comparison);
     }

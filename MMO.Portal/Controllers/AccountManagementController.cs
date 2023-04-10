@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -83,7 +82,9 @@ namespace MMO.Portal.Controllers
             flags |= AccountValidation.CheckEmail(password);
 
             if (flags == RegistrationFlags.None)
-                flags |= EmailExists(password) ? RegistrationFlags.EmailTaken : RegistrationFlags.None;
+                flags |= EmailExists(password)
+                    ? RegistrationFlags.EmailTaken
+                    : RegistrationFlags.None;
 
             if (flags != RegistrationFlags.None)
                 return BadRequest(flags.ToString());

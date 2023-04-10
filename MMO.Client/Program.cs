@@ -10,10 +10,7 @@ PacketManager.RegisterAssembly();
 
 var application = new Application();
 
-var netClientSettings = new NetControllerSettings
-{
-    KeepAlive = TimeSpan.FromSeconds(10)
-};
+var netClientSettings = new NetControllerSettings { KeepAlive = TimeSpan.FromSeconds(10) };
 var netClient = new NetClient(netClientSettings);
 
 var portalService = new PortalService("https://192.168.1.232:7297");

@@ -5,6 +5,7 @@ namespace MMO.Servers.Core.Models;
 public class ServerConfig : Config
 {
     public readonly ConnectionSettings Connection = new();
+
     public class ConnectionSettings
     {
         public string Address = "localhost";
@@ -14,6 +15,7 @@ public class ServerConfig : Config
     }
 
     public readonly RegistrationSettings Registration = new();
+
     public class RegistrationSettings
     {
         public string Name = "";
@@ -21,6 +23,7 @@ public class ServerConfig : Config
     }
 
     public readonly AuthenticationSettings Authentication = new();
+
     public class AuthenticationSettings
     {
         public string User = "";

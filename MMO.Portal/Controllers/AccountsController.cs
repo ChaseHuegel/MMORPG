@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +47,12 @@ namespace MMO.Portal.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAccount(string user, string password, string email, string roles = null)
+        public async Task<IActionResult> CreateAccount(
+            string user,
+            string password,
+            string email,
+            string roles = null
+        )
         {
             RegistrationFlags flags = RegistrationFlags.None;
             flags |= AccountValidation.CheckUser(user);
@@ -79,7 +83,9 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' created for '{email}' with roles: '{roles}'. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"Account '{user}' created for '{email}' with roles: '{roles}'. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok();
         }
 
@@ -99,7 +105,9 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' was deleted by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"Account '{user}' was deleted by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok();
         }
 
@@ -135,7 +143,9 @@ namespace MMO.Portal.Controllers
             _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' was updated by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"Account '{user}' was updated by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok();
         }
 

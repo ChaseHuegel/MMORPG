@@ -27,15 +27,20 @@ public static class ChatHandler
             {
                 server.Send(packet, e.Session);
                 server.Send(packet, target);
-                Console.WriteLine($"[CHAT] [{channel}] {e.Session.ID}->{target.ID}: {packet.Message}");
+                Console.WriteLine(
+                    $"[CHAT] [{channel}] {e.Session.ID}->{target.ID}: {packet.Message}"
+                );
             }
             else
             {
-                server.Send(new ChatPacket
-                {
-                    Channel = (int)ChatChannel.System,
-                    Error = "That user is not online."
-                }, e.Session);
+                server.Send(
+                    new ChatPacket
+                    {
+                        Channel = (int)ChatChannel.System,
+                        Error = "That user is not online."
+                    },
+                    e.Session
+                );
                 Console.WriteLine($"[CHAT] [{channel}] {packet.Sender}->OFFLINE: {packet.Message}");
             }
         }

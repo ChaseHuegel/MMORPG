@@ -34,7 +34,8 @@ public class ServerNode
         NetServer.Connect(endPoint, JwtToken);
     }
 
-    public void AddPacketRoute<TPacket>(IPEndPoint endPoint) where TPacket : Packet
+    public void AddPacketRoute<TPacket>(IPEndPoint endPoint)
+        where TPacket : Packet
     {
         PacketRoutes.Add(typeof(TPacket), endPoint);
     }
@@ -43,14 +44,15 @@ public class ServerNode
     {
         PacketManager.RegisterAssembly();
 
-        NetControllerSettings netControllerSettings = new()
-        {
-            AddressFamily = AddressFamily.InterNetwork,
-            Port = config.Connection.Port,
-            MaxSessions = config.Connection.MaxSessions,
-            SessionExpiration = config.Connection.SessionExpiration,
-            KeepAlive = TimeSpan.FromSeconds(10),
-        };
+        NetControllerSettings netControllerSettings =
+            new()
+            {
+                AddressFamily = AddressFamily.InterNetwork,
+                Port = config.Connection.Port,
+                MaxSessions = config.Connection.MaxSessions,
+                SessionExpiration = config.Connection.SessionExpiration,
+                KeepAlive = TimeSpan.FromSeconds(10),
+            };
 
         NetServer = new NetServer(netControllerSettings);
         NetServer.PacketAccepted += OnPacketAccepted;
@@ -59,38 +61,56 @@ public class ServerNode
 
     private async Task RegisterWithPortalAsync(ServerConfig config)
     {
-        var host = new Host
-        {
-            Hostname = config.Connection.Address,
-            Port = config.Connection.Port
-        };
+        var host = new Host { Hostname = config.Connection.Address, Port = config.Connection.Port };
 
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+            ServerCertificateCustomValidationCallback = (
+                request,
+                certificate,
+                chain,
+                sslPolicyErrors
+            ) => true
         };
         HttpClient httpClient = new(handler);
 
         //  Login to the portal
-        var loginResult = await httpClient.PostAsync($"https://localhost:7297/api/Session/Login?user={config.Authentication.User}&password={config.Authentication.Password}", null);
+        var loginResult = await httpClient.PostAsync(
+            $"https://localhost:7297/api/Session/Login?user={config.Authentication.User}&password={config.Authentication.Password}",
+            null
+        );
         if (!loginResult.IsSuccessStatusCode)
             throw new AuthenticationException();
 
         JwtToken = await loginResult.Content.ReadAsStringAsync();
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JwtToken);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer",
+            JwtToken
+        );
 
         //  Advertise this server via the portal
-        await httpClient.PostAsync($"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}", null);
+        await httpClient.PostAsync(
+            $"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}",
+            null
+        );
     }
 
     private bool HandshakeValidateCallback(EndPoint endPoint, string secret)
     {
         var handler = new HttpClientHandler
         {
-            ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) => true
+            ServerCertificateCustomValidationCallback = (
+                request,
+                certificate,
+                chain,
+                sslPolicyErrors
+            ) => true
         };
         HttpClient httpClient = new(handler);
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", secret);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer",
+            secret
+        );
 
         var task = httpClient.PostAsync($"https://localhost:7297/api/Session/Validate", null);
         task.Wait();

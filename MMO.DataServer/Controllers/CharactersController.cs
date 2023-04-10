@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MMO.Bridge.Models;
 using MMO.DataServer.Data;
@@ -26,7 +25,8 @@ namespace MMO.DataServer.Controllers
                 AllowedNameChars = "abcdefghijklmnopqrstuvwxyz ",
                 Races = _context.Races.ToArray(),
                 Classes = _context.Classes.ToArray(),
-                AllowedCombinations = new Dictionary<int, int[]>{
+                AllowedCombinations = new Dictionary<int, int[]>
+                {
                     { 0, new int[] { 0, 1, 2, 3 } },
                     { 1, new int[] { 1, 2, 3 } },
                     { 2, new int[] { 1, 3 } },

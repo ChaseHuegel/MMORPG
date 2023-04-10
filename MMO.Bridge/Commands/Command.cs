@@ -11,7 +11,8 @@ public abstract class Command
     public Command[] Subcommands { get; private set; } = Array.Empty<Command>();
     private Command? Parent;
 
-    public Command() : this(Array.Empty<Command>()) { }
+    public Command()
+        : this(Array.Empty<Command>()) { }
 
     public Command(Command[] commands)
     {
@@ -115,14 +116,16 @@ public abstract class Command
 public abstract class Command<TSub0> : Command
     where TSub0 : Command, new()
 {
-    public Command() : base(new Command[] { new TSub0() }) { }
+    public Command()
+        : base(new Command[] { new TSub0() }) { }
 }
 
 public abstract class Command<TSub0, TSub1> : Command
     where TSub0 : Command, new()
     where TSub1 : Command, new()
 {
-    public Command() : base(new Command[] { new TSub0(), new TSub1() }) { }
+    public Command()
+        : base(new Command[] { new TSub0(), new TSub1() }) { }
 }
 
 public abstract class Command<TSub0, TSub1, TSub2> : Command
@@ -130,5 +133,6 @@ public abstract class Command<TSub0, TSub1, TSub2> : Command
     where TSub1 : Command, new()
     where TSub2 : Command, new()
 {
-    public Command() : base(new Command[] { new TSub0(), new TSub1(), new TSub2() }) { }
+    public Command()
+        : base(new Command[] { new TSub0(), new TSub1(), new TSub2() }) { }
 }

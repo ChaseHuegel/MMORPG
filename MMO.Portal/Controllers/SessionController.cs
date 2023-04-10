@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +48,9 @@ namespace MMO.Portal.Controllers
 
             var token = await _userManager.SignInAsync(account);
 
-            Console.WriteLine($"User '{user}' logged in. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"User '{user}' logged in. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok(token);
         }
 
@@ -61,14 +62,18 @@ namespace MMO.Portal.Controllers
 
             await _userManager.SignOutAsync(account);
 
-            Console.WriteLine($"User '{user}' logged out. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"User '{user}' logged out. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok();
         }
 
         [HttpPost("Validate")]
         public IActionResult Validate()
         {
-            Console.WriteLine($"User '{HttpContext.User.GetUserClaim()}' was validated. [{HttpContext.Connection.RemoteIpAddress}]");
+            Console.WriteLine(
+                $"User '{HttpContext.User.GetUserClaim()}' was validated. [{HttpContext.Connection.RemoteIpAddress}]"
+            );
             return Ok();
         }
     }

@@ -21,7 +21,10 @@ public class UserManager
 
     public Task<string> SignInAsync(Account account)
     {
-        var identity = new ClaimsIdentity(GetUserClaims(account), JwtBearerDefaults.AuthenticationScheme);
+        var identity = new ClaimsIdentity(
+            GetUserClaims(account),
+            JwtBearerDefaults.AuthenticationScheme
+        );
 
         var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JWT:Key"));
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -30,7 +33,10 @@ public class UserManager
             Audience = _configuration.GetValue<string>("JWT:Audience"),
             Subject = identity,
             Expires = DateTime.UtcNow.AddHours(24),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature
+            )
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -55,16 +61,15 @@ public class UserManager
 
     public bool IsUserLoggedIn(ClaimsPrincipal principal)
     {
-        string userClaim = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        string userClaim = principal.Claims
+            .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)
+            .Value;
         return IsUserLoggedIn(userClaim);
     }
 
     private static IEnumerable<Claim> GetUserClaims(Account account)
     {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, account.User),
-        };
+        var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, account.User), };
 
         if (!string.IsNullOrWhiteSpace(account.Roles))
             claims.AddRange(account.Roles.Split(',').Select(x => new Claim(ClaimTypes.Role, x)));

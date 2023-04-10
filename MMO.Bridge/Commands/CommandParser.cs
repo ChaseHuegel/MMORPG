@@ -13,7 +13,8 @@ public class CommandParser
         Commands = new List<Command>(commands);
     }
 
-    public CommandParser(char indicator, params Command[] commands) : this(commands)
+    public CommandParser(char indicator, params Command[] commands)
+        : this(commands)
     {
         Indicator = indicator;
     }
@@ -36,7 +37,11 @@ public class CommandParser
             return false;
 
         var lineStart = Indicator != default ? 1 : 0;
-        var parts = line[lineStart..].Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var parts = line[lineStart..].Split(
+            ' ',
+            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries
+        );
+
         var args = new ReadOnlyQueue<string>(parts);
 
         foreach (Command command in Commands)

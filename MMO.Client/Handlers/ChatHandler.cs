@@ -1,4 +1,3 @@
-using System;
 using MMO.Bridge.Packets;
 using MMO.Bridge.Types;
 using Swordfish.Library.Networking;
@@ -12,7 +11,9 @@ public static class ChatHandler
     public static void OnChatReceived(NetClient client, ChatPacket packet, NetEventArgs e)
     {
         if (string.IsNullOrEmpty(packet.Error))
-            Console.WriteLine($"[CHAT] [{(ChatChannel)packet.Channel}] {packet.Sender}: {packet.Message}");
+            Console.WriteLine(
+                $"[CHAT] [{(ChatChannel)packet.Channel}] {packet.Sender}: {packet.Message}"
+            );
         else
             Console.WriteLine($"[CHAT] [{(ChatChannel)packet.Channel}] {packet.Error}");
     }
