@@ -4,9 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MMO.DataServer.Data;
+using MMO.DataServer.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 var portalConnectionString = builder.Configuration.GetConnectionString("portal");
+
+var registration = builder.Configuration.GetSection("Registration").Get<PortalRegistrationConfig>();
+await PortalUtils.RegisterWithPortalAsync(registration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
