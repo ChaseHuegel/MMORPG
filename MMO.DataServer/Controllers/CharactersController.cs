@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MMO.Bridge.Models;
 using MMO.DataServer.Data;
 
 namespace MMO.DataServer.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CharactersController : ControllerBase
@@ -16,15 +16,24 @@ namespace MMO.DataServer.Controllers
             _context = context;
         }
 
-        [HttpGet("Classes")]
-        public ActionResult<IEnumerable<string>> GetClasses()
+        [HttpGet("CreationRules")]
+        public ActionResult<CharacterCreationRules> GetClasses()
         {
-            return new string[] {
-                "Warrior",
-                "Wizard",
-                "Cleric",
-                "Rogue",
+            var rules = new CharacterCreationRules
+            {
+                MinNameLength = 4,
+                MaxNameLength = 20,
+                AllowedNameChars = "abcdefghijklmnopqrstuvwxyz ",
+                Races = _context.Races.ToArray(),
+                Classes = _context.Classes.ToArray(),
+                AllowedCombinations = new Dictionary<int, int[]>{
+                    { 0, new int[] { 0, 1, 2, 3 } },
+                    { 1, new int[] { 1, 2, 3 } },
+                    { 2, new int[] { 1, 3 } },
+                }
             };
+
+            return rules;
         }
     }
 }
