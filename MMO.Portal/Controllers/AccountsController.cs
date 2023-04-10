@@ -79,7 +79,7 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Add(account);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' created for '{email}' with roles: '{roles}'. [{HttpContext.Connection}]");
+            Console.WriteLine($"Account '{user}' created for '{email}' with roles: '{roles}'. [{HttpContext.Connection.RemoteIpAddress}]");
             return Ok();
         }
 
@@ -99,7 +99,7 @@ namespace MMO.Portal.Controllers
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' was deleted by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
+            Console.WriteLine($"Account '{user}' was deleted by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]");
             return Ok();
         }
 
@@ -135,7 +135,7 @@ namespace MMO.Portal.Controllers
             _context.Entry(account).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            Console.WriteLine($"Account '{user}' was updated by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
+            Console.WriteLine($"Account '{user}' was updated by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]");
             return Ok();
         }
 

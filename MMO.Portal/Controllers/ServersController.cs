@@ -37,7 +37,7 @@ namespace MMO.Portal.Controllers
 
             _serverManager.Servers.Add(server);
 
-            Console.WriteLine($"Server '{type}:{name}@{address}' was registered by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection}]");
+            Console.WriteLine($"Server '{type}:{name}@{address}' was registered by '{HttpContext.User.GetUserClaim()}'. [{HttpContext.Connection.RemoteIpAddress}]");
             return Ok();
         }
     }
