@@ -26,16 +26,57 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Run Client/Server",
+            "label": "Deploy",
             "dependsOn": [
-                "Server",
-                "Client"
+                "Portal",
+                "DataServer",
+                "ChatServer",
+                "ClusterServer",
             ],
             "dependsOrder": "parallel",
             "group": "build",
             "problemMatcher": [
                 "$tsc-watch"
             ]
+        },
+        {
+            "label": "Portal",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.portal/mmo.portal.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ChatServer",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.chatserver/mmo.chatserver.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ClusterServer",
+            "command": "dotnet",
+            "type": "process",
+            "group": "build",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/mmo.clusterserver/mmo.clusterserver.csproj"
+            ],
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "Client",
@@ -46,12 +87,12 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/mmorpg.clientconsole/Mmorpg.ClientConsole.csproj"
+                "${workspaceFolder}/mmo.client/mmo.client.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "Server",
+            "label": "DataServer",
             "command": "dotnet",
             "type": "process",
             "group": "build",
@@ -59,7 +100,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/mmorpg.server/Mmorpg.Server.csproj"
+                "${workspaceFolder}/mmo.dataserver/mmo.dataserver.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

@@ -8,10 +8,10 @@
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/mmorpg.server/bin/Debug/net6.0/Mmorpg.Server.dll",
+            // "preLaunchTask": "build",
+            "program": "${workspaceFolder}/mmo.portal/bin/Debug/net7.0/mmo.portal.exe",
             "args": [],
-            "cwd": "${workspaceFolder}/mmorpg.server",
+            "cwd": "${workspaceFolder}/mmo.portal",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "logging": {
