@@ -32,16 +32,21 @@ namespace MMO.Portal.Controllers
                 return Unauthorized(LoginFlags.AlreadyLoggedIn.ToString());
 
             LoginFlags flags = LoginFlags.None;
+
             Account account = await _context.Accounts.FindAsync(user);
             if (account == null)
+            {
                 flags |= LoginFlags.IncorrectUser;
+            }
+            else
+            {
+                byte[] hash = Convert.FromBase64String(account.Hash);
+                byte[] salt = Convert.FromBase64String(account.Salt);
+                byte[] saltedPassword = Security.SaltedHash(Encoding.ASCII.GetBytes(password), salt);
 
-            byte[] hash = Convert.FromBase64String(account.Hash);
-            byte[] salt = Convert.FromBase64String(account.Salt);
-            byte[] saltedPassword = Security.SaltedHash(Encoding.ASCII.GetBytes(password), salt);
-
-            if (!saltedPassword.SequenceEqual(hash))
-                flags |= LoginFlags.IncorrectPassword;
+                if (!saltedPassword.SequenceEqual(hash))
+                    flags |= LoginFlags.IncorrectPassword;
+            }
 
             if (flags != LoginFlags.None)
                 return Unauthorized(flags.ToString());
