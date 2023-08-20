@@ -1,7 +1,9 @@
-using MMO.Bridge.Commands;
 using MMO.Bridge.Packets;
 using MMO.Bridge.Types;
 using Swordfish.Library.Networking;
+using Swordfish.Library.IO;
+using Swordfish.Library.Collections;
+
 
 namespace MMO.Client.Commands;
 
@@ -18,7 +20,7 @@ public class ChatCommand : Command
         _netController = netController;
     }
 
-    protected override Task<CommandCompletion> InvokeAsync(ReadOnlyQueue<string> args)
+    protected override Task<CommandState> InvokeAsync(ReadOnlyQueue<string> args)
     {
         string message = string.Join(' ', args.TakeAll());
 
@@ -27,6 +29,6 @@ public class ChatCommand : Command
         else
             Console.WriteLine("Say: " + message);
 
-        return Task.FromResult(CommandCompletion.Success);
+        return Task.FromResult(CommandState.Success);
     }
 }

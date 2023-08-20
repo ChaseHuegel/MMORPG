@@ -10,9 +10,15 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Swordfish" Version="2.1.14" />
+    <PackageReference Include="Swordfish.Integrations" Version="1.2.0" />
+    <PackageReference Include="Swordfish.Library" Version="2.4.9" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <SelfContained>true</SelfContained>

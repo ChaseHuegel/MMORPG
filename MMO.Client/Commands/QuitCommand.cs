@@ -1,17 +1,19 @@
-using MMO.Bridge.Commands;
 using MMO.Bridge.Types;
 using Swordfish.Library.Networking;
+using Swordfish.Library.IO;
+using Swordfish.Library.Collections;
+using MMO.Client.Control;
 
 namespace MMO.Client.Commands;
 
 public class QuitCommand : Command
 {
-    private Application _application;
+    private ClientController _clientController;
     private NetController _netController;
 
-    public QuitCommand(Application application, NetController netController)
+    public QuitCommand(ClientController clientController, NetController netController)
     {
-        _application = application;
+        _clientController = clientController;
         _netController = netController;
     }
 
@@ -19,10 +21,10 @@ public class QuitCommand : Command
     public override string Description => "Exits the application.";
     public override string ArgumentsHint => "";
 
-    protected override Task<CommandCompletion> InvokeAsync(ReadOnlyQueue<string> args)
+    protected override Task<CommandState> InvokeAsync(ReadOnlyQueue<string> args)
     {
         _netController.Disconnect();
-        _application.Exit();
-        return Task.FromResult(CommandCompletion.Success);
+        _clientController.Exit();
+        return Task.FromResult(CommandState.Success);
     }
 }
