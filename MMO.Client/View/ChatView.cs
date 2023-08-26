@@ -36,6 +36,8 @@ public class ChatView : Plugin
 
     public EventHandler<ChatEventArgs> Submit;
 
+    private EventHandler<ChatPacket> NewChat;
+
     private readonly object ChatLock = new();
     private readonly List<ChatPacket> Chat = new();
 
@@ -65,6 +67,7 @@ public class ChatView : Plugin
             }
         };
         canvas.Content.Add(chatScroll);
+        NewChat += OnNewChat;
 
         LayoutGroup inputGroup = new() {
             Layout = ElementAlignment.HORIZONTAL
@@ -87,6 +90,11 @@ public class ChatView : Plugin
         {
             foreach (ChatPacket chat in Chat)
                 AppendChat(chat);
+        }
+
+        void OnNewChat(object? sender, ChatPacket chat)
+        {
+            AppendChat(chat);
         }
 
         void OnSubmit(object? sender, string text)
@@ -112,6 +120,7 @@ public class ChatView : Plugin
         lock (ChatLock)
         {
             Chat.Add(chat);
+            NewChat?.Invoke(this, chat);
         }
     }
 }

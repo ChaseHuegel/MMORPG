@@ -49,28 +49,6 @@ public class ChatController : Plugin
     public override void Start()
     {
         ChatView.Submit += OnChatSubmitted;
-        ChatView.Add(new ChatPacket(1, 0, "chat test!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
-        ChatView.Add(new ChatPacket(2, 0, "hey!", (int)ChatChannel.General));
     }
 
     private void OnChatSubmitted(object sender, ChatEventArgs args)
