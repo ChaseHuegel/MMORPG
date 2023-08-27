@@ -1,29 +1,12 @@
-using System.Text;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
 using ImGuiNET;
-using Swordfish.ECS;
 using Swordfish.Extensibility;
-using Swordfish.Graphics;
 using Swordfish.Library.Constraints;
-using Swordfish.Library.Diagnostics;
-using Swordfish.Library.Extensions;
-using Swordfish.Library.IO;
-using Swordfish.Library.Reflection;
-using Swordfish.Library.Types;
 using Swordfish.Types.Constraints;
 using Swordfish.UI.Elements;
 using MMO.Bridge.Packets;
-using MMO.Bridge.Types;
 using MMO.Client.Types;
 
 using Debugger = Swordfish.Library.Diagnostics.Debugger;
-using Path = Swordfish.Library.IO.Path;
 
 namespace MMO.Client.View;
 
@@ -73,16 +56,9 @@ public class ChatView : Plugin
             Layout = ElementAlignment.HORIZONTAL
         };
 
-        InputTextElement channel = new(string.Empty, 10) {
-            Constraints = new RectConstraints() {
-                Width = new AbsoluteConstraint(20)
-            }
-        };
-
         InputTextElement input = new(string.Empty, 256);
         input.Submit += OnSubmit;
 
-        inputGroup.Content.Add(channel);
         inputGroup.Content.Add(input);
         canvas.Content.Add(inputGroup);
 
@@ -105,13 +81,7 @@ public class ChatView : Plugin
 
         void AppendChat(ChatPacket chat)
         {
-            string text;
-            if (string.IsNullOrEmpty(chat.Error))
-                text = $"[{(ChatChannel)chat.Channel}] {chat.Sender}: {chat.Message}";
-            else
-                text = $"[{(ChatChannel)chat.Channel}] {chat.Error}";
-
-            chatScroll.Content.Add(new TextElement(text));
+            chatScroll.Content.Add(new TextElement(chat.ToString()));
         }
     }
 
@@ -119,6 +89,7 @@ public class ChatView : Plugin
     {
         lock (ChatLock)
         {
+            Debugger.Log($"Chat: {chat.Message}");
             Chat.Add(chat);
             NewChat?.Invoke(this, chat);
         }

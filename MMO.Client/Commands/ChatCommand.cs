@@ -23,11 +23,7 @@ public class ChatCommand : Command
     protected override Task<CommandState> InvokeAsync(ReadOnlyQueue<string> args)
     {
         string message = string.Join(' ', args.TakeAll());
-
-        if (_netController != null)
-            _netController.Broadcast(new ChatPacket(_netController.Session.ID, 0, message, 0));
-        else
-            Console.WriteLine("Say: " + message);
+        _netController.Broadcast(new ChatPacket(_netController.Session.ID, 0, message, (int)ChatChannel.General));
 
         return Task.FromResult(CommandState.Success);
     }

@@ -13,7 +13,6 @@
   <ItemGroup>
     <PackageReference Include="Swordfish" Version="2.1.14" />
     <PackageReference Include="Swordfish.Integrations" Version="1.2.0" />
-    <PackageReference Include="Swordfish.Library" Version="2.4.9" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,20 @@ public class ChatController : Plugin
 
     private void OnChatSubmitted(object sender, ChatEventArgs args)
     {
-        _ = ClientController.CommandParser.TryRunAsync(args.Text);
+        ClientController.CommandParser.TryRunAsync(args.Text).ContinueWith(OnUnknownCommand);
+    }
+
+    private void OnUnknownCommand(Task<CommandResult> task)
+    {
+        if (task.Result.IsSuccessState)
+            return;
+
+        ChatPacket chat = new() {
+            Channel = (int)ChatChannel.System,
+            Error = $"Unknown command: \"{task.Result.OriginalString}\"."
+        };
+
+        ChatView.Add(chat);
     }
 
     [ClientPacketHandler]

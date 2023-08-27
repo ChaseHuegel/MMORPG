@@ -60,10 +60,8 @@ public class ClientController : Plugin
             new ChatCommand(netClient),
             new LoginCommand(netClient, portalService)
         );
-    }
 
-    public override void Start()
-    {
+        //  TODO There is a bug in the engine here. Maximize can rarely be missed by running in the ctor instead of Start.
         WindowContext.Maximize();
 
         ShortcutService.RegisterShortcut(
@@ -76,6 +74,10 @@ public class ClientController : Plugin
                 Exit
             )
         );
+    }
+
+    public override void Start()
+    {
     }
 
     public void Exit()
