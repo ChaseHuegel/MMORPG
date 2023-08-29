@@ -7,6 +7,7 @@ using MMO.Bridge.Packets;
 using MMO.Client.Types;
 
 using Debugger = Swordfish.Library.Diagnostics.Debugger;
+using Swordfish.Library.IO;
 
 namespace MMO.Client.View;
 
@@ -14,15 +15,24 @@ public class ChatView : Plugin
 {
     private const ImGuiWindowFlags CANVAS_FLAGS = ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar;
 
-    public override string Name => "Chat View";
-    public override string Description => "View component of chat capabilities.";
+    private readonly IShortcutService ShortcutService;
 
-    public EventHandler<ChatEventArgs> Submit;
-
-    private EventHandler<ChatPacket> NewChat;
+    private EventHandler<ChatPacket>? NewChat;
 
     private readonly object ChatLock = new();
     private readonly List<ChatPacket> Chat = new();
+
+    public EventHandler<ChatEventArgs>? Submit;
+
+    public override string Name => "Chat View";
+    public override string Description => "View component of chat capabilities.";
+
+    public ChatView(IShortcutService shortcutService)
+    {
+        ShortcutService = shortcutService;
+        Submit = null;
+        NewChat = null;
+    }
 
     public override void Start()
     {
@@ -59,6 +69,28 @@ public class ChatView : Plugin
         InputTextElement input = new(string.Empty, 256);
         input.Submit += OnSubmit;
 
+        ShortcutService.RegisterShortcut(
+            new Shortcut(
+                "Chat",
+                "UI",
+                ShortcutModifiers.NONE,
+                Key.ENTER,
+                Shortcut.DefaultEnabled,
+                FocusInput
+            )
+        );
+
+        ShortcutService.RegisterShortcut(
+            new Shortcut(
+                "Command",
+                "UI",
+                ShortcutModifiers.NONE,
+                Key.SLASH,
+                Shortcut.DefaultEnabled,
+                StartCommandInput
+            )
+        );
+
         inputGroup.Content.Add(input);
         canvas.Content.Add(inputGroup);
 
@@ -75,13 +107,27 @@ public class ChatView : Plugin
 
         void OnSubmit(object? sender, string text)
         {
+            if (!string.IsNullOrEmpty(input.Text))
+                Submit?.Invoke(this, new ChatEventArgs(text));
+
             input.Text = string.Empty;
-            Submit?.Invoke(this, new ChatEventArgs(text));
         }
 
         void AppendChat(ChatPacket chat)
         {
             chatScroll.Content.Add(new TextElement(chat.ToString()));
+        }
+
+        void FocusInput()
+        {
+            if (string.IsNullOrEmpty(input.Text))
+                input.Focus();
+        }
+
+        void StartCommandInput()
+        {
+            FocusInput();
+            input.Text = "/";
         }
     }
 

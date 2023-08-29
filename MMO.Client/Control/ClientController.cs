@@ -1,34 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Reflection;
-using ImGuiNET;
-using Swordfish.ECS;
 using Swordfish.Extensibility;
 using Swordfish.Graphics;
-using Swordfish.Library.Constraints;
-using Swordfish.Library.Diagnostics;
-using Swordfish.Library.Extensions;
 using Swordfish.Library.IO;
-using Swordfish.Library.Reflection;
-using Swordfish.Library.Types;
-using Swordfish.Types.Constraints;
-using Swordfish.UI.Elements;
-using MMO.Bridge.Packets;
-using MMO.Client;
 using MMO.Client.Commands;
 using MMO.Client.Models;
 using MMO.Client.Services;
-using Swordfish;
 using Swordfish.Library.Networking;
 using Swordfish.Library.Util;
-using Swordfish.Library.IO;
-
-using Debugger = Swordfish.Library.Diagnostics.Debugger;
-using Path = Swordfish.Library.IO.Path;
 
 namespace MMO.Client.Control;
 
