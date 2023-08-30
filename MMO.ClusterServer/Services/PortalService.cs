@@ -4,7 +4,7 @@ using MMO.Bridge.Util;
 
 namespace MMO.ClusterServer.Services;
 
-public class PortalService : ConnectionHandler
+public class PortalService
 {
     private Server[]? _servers;
     private readonly Uri _serversEndpoint;
@@ -19,7 +19,6 @@ public class PortalService : ConnectionHandler
         Server match;
         while (!TryFindServer(type, out match))
         {
-            await ReconnectAsync();
         }
 
         bool TryFindServer(string value, out Server server)
@@ -32,12 +31,28 @@ public class PortalService : ConnectionHandler
         return match;
     }
 
-    public override bool IsConnected()
+    public bool TryGetServer(string type, out Server server)
     {
-        return _servers != null && _servers.Length > 0;
+        server = default;
+        if (_servers == null || _servers.Length == 0)
+            return false;
+
+        for (int i = 0; i < _servers.Length; i++)
+        {
+            server = _servers[i];
+            if (server.Type.Equals(type, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+        }
+
+        return false;
     }
 
-    protected override async Task TryConnectAsync()
+    public void Poll()
+    {
+        PollAsync().Wait();
+    }
+
+    public async Task PollAsync()
     {
         var handler = new HttpClientHandler
         {
@@ -47,10 +62,5 @@ public class PortalService : ConnectionHandler
 
         var httpClient = new HttpClient(handler);
         _servers = await httpClient.GetFromJsonAsync<Server[]>(_serversEndpoint);
-    }
-
-    protected override void Disconnect()
-    {
-        _servers = null;
     }
 }

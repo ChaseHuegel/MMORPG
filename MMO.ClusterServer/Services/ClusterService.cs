@@ -6,10 +6,8 @@ using MMO.Servers.Core;
 
 namespace MMO.Services.ClusterServer;
 
-public class ClusterService : ConnectionHandler
+public class ClusterService
 {
-    public override PipelineState State => PipelineState.Active;
-
     private readonly ServerNode _serverNode;
     private readonly PortalService _portalService;
 
@@ -20,21 +18,6 @@ public class ClusterService : ConnectionHandler
     {
         _serverNode = serverNode;
         _portalService = portalService;
-    }
-
-    public override bool IsConnected()
-    {
-        return _serverNode.Running && _portalService.IsConnected() && _connected;
-    }
-
-    protected override async Task TryConnectAsync()
-    {
-        _connected |= await ConnectChatServer();
-    }
-
-    protected override void Disconnect()
-    {
-        _connected = false;
     }
 
     private async Task<bool> ConnectChatServer()
