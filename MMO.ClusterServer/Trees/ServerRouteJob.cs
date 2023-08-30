@@ -22,7 +22,7 @@ public class ServerRouteJob : AbstractBehaviorJob<ServerRoute>
                 new BehaviorSequence(
                     new BehaviorDynamic<ServerRoute>(RequestRoute),
                     new BehaviorDynamic<ServerRoute>(ConnectToRoute),
-                    new BehaviorDynamic<ServerRoute>(SetupRoutes),
+                    new BehaviorDynamic<ServerRoute>(SetupPacketRoutes),
                     new BehaviorDynamic<ServerRoute>(AttachDisconnectListener)
                 )
             )
@@ -61,7 +61,7 @@ public class ServerRouteJob : AbstractBehaviorJob<ServerRoute>
         }
     }
 
-    private BehaviorState SetupRoutes(ServerRoute route, float arg2)
+    private BehaviorState SetupPacketRoutes(ServerRoute route, float arg2)
     {
         if (route.RouteEndPoint == null)
             return BehaviorState.FAILED;

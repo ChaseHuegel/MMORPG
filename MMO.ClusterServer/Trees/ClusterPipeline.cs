@@ -1,15 +1,13 @@
-using MMO.Bridge.Models;
 using MMO.Bridge.Packets;
 using MMO.ClusterServer.Services;
 using MMO.Servers.Core;
-using MMO.Services.ClusterServer;
 using Swordfish.Library.BehaviorTrees;
 
 namespace MMO.ClusterServer.Trees;
 
 public class ClusterPipeline
 {
-    public BehaviorPipeline Pipeline { get; }
+    private BehaviorPipeline Pipeline { get; }
 
     public ClusterPipeline(PortalService portalService)
     {
