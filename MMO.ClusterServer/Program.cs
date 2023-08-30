@@ -1,36 +1,26 @@
-﻿using System.Net.Http.Json;
-using MMO.Bridge.Models;
-using MMO.Bridge.Packets;
+﻿using MMO.Bridge.Packets;
 using MMO.Bridge.Util;
+using MMO.ClusterServer.Services;
 using MMO.Servers.Core;
+using MMO.Services.ClusterServer;
 using Swordfish.Library.Networking;
 
 PacketManager.RegisterAssembly();
 PacketManager.RegisterAssembly<ChatPacket>();
 
+var portalUri = new Uri("https://localhost:7297");
+var portalService = new PortalService(portalUri);
+
 var node = new ServerNode();
-await node.StartAsync(args);
+var nodeService = new NodeService(node, args);
 
-//  Collect known servers from the portal
-var handler = new HttpClientHandler
-{
-    ServerCertificateCustomValidationCallback = (request, certificate, chain, sslPolicyErrors) =>
-        true
-};
-var httpClient = new HttpClient(handler);
-Server[]? servers = await httpClient.GetFromJsonAsync<Server[]>(
-    "https://localhost:7297/api/Servers"
-);
+var clusterService = new ClusterService(node, portalService);
 
-//  Find a chat server and connect to it
-var chatServer = servers!.First(server => server.Type.Equals("Chat"));
-var chatServerEndPoint = chatServer.Address.ParseIPEndPoint();
-node.Connect(chatServerEndPoint);
+var nodePipeline = Pipeline.Create(nodeService).Requires(portalService);
+var clusterPipeline = Pipeline.Create(clusterService).Requires(nodePipeline);
+await clusterPipeline.StartAsync();
 
-//  Setup packet routing
-node.AddPacketRoute<ChatPacket>(chatServerEndPoint);
-
-while (node.Running)
+while (clusterPipeline.State != PipelineState.Complete)
 {
     //  Keep alive
 }

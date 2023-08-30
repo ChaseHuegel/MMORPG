@@ -34,6 +34,11 @@ public class ServerNode
         NetServer.Connect(endPoint, JwtToken);
     }
 
+    public Task ConnectAsync(IPEndPoint endPoint)
+    {
+        return NetServer.ConnectAsync(endPoint, JwtToken);
+    }
+
     public void AddPacketRoute<TPacket>(IPEndPoint endPoint)
         where TPacket : Packet
     {
