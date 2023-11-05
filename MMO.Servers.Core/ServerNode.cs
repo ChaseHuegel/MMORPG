@@ -12,6 +12,7 @@ namespace MMO.Servers.Core;
 public class ServerNode
 {
     public bool Running { get; private set; }
+    public bool Registered { get; private set; }
 
     private NetServer NetServer;
 
@@ -19,19 +20,39 @@ public class ServerNode
 
     private readonly Dictionary<Type, IPEndPoint> PacketRoutes = new();
 
-    public async Task StartAsync(string[] args)
+    public async Task StartAsync(params string[] args)
     {
         ServerConfig config = Config.Load<ServerConfig>("config/server.toml");
 
         InitializeNetController(config);
-        await RegisterWithPortalAsync(config);
+        await RegisterWithPortalAsync();
 
+        Running = true;
+    }
+
+    public void Start(params string[] args)
+    {
+        ServerConfig config = Config.Load<ServerConfig>("config/server.toml");
+        InitializeNetController(config);
         Running = true;
     }
 
     public void Connect(IPEndPoint endPoint)
     {
         NetServer.Connect(endPoint, JwtToken);
+    }
+
+    public Task ConnectAsync(IPEndPoint endPoint)
+    {
+        return NetServer.ConnectAsync(endPoint, JwtToken);
+    }
+
+    public void AddPacketRoute(Type type, IPEndPoint endPoint)
+    {
+        if (!type.IsAssignableTo(typeof(Packet)))
+            throw new ArgumentException();
+
+        PacketRoutes.Add(type, endPoint);
     }
 
     public void AddPacketRoute<TPacket>(IPEndPoint endPoint)
@@ -59,8 +80,10 @@ public class ServerNode
         NetServer.HandshakeValidateCallback = HandshakeValidateCallback;
     }
 
-    private async Task RegisterWithPortalAsync(ServerConfig config)
+    public async Task RegisterWithPortalAsync()
     {
+        ServerConfig config = Config.Load<ServerConfig>("config/server.toml");
+
         var host = new Host { Hostname = config.Connection.Address, Port = config.Connection.Port };
 
         var handler = new HttpClientHandler
@@ -93,6 +116,8 @@ public class ServerNode
             $"https://localhost:7297/api/Servers?name={config.Registration.Name}&type={config.Registration.Type}&address={host}",
             null
         );
+
+        Registered = true;
     }
 
     private bool HandshakeValidateCallback(EndPoint endPoint, string secret)

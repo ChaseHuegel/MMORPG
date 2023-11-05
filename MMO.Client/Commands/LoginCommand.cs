@@ -1,8 +1,9 @@
-using MMO.Bridge.Commands;
 using MMO.Bridge.Types;
 using MMO.Bridge.Util;
 using MMO.Client.Services;
 using Swordfish.Library.Networking;
+using Swordfish.Library.IO;
+using Swordfish.Library.Collections;
 
 namespace MMO.Client.Commands;
 
@@ -21,7 +22,7 @@ public class LoginCommand : Command
         _portalService = portalService;
     }
 
-    protected override async Task<CommandCompletion> InvokeAsync(ReadOnlyQueue<string> args)
+    protected override async Task<CommandState> InvokeAsync(ReadOnlyQueue<string> args)
     {
         string user = args.Take();
         string password = args.Take();
@@ -29,13 +30,13 @@ public class LoginCommand : Command
         string? token = await _portalService.TryLoginAsync(user, password);
 
         if (token == null)
-            return CommandCompletion.Failure;
+            return CommandState.Failure;
 
         var clusters = await _portalService.GetClustersAsync();
 
         var endPoint = clusters.First().Address.ParseIPEndPoint();
         _netController.Connect(endPoint, token);
 
-        return CommandCompletion.Success;
+        return CommandState.Success;
     }
 }
